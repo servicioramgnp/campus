@@ -1,0 +1,875 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Campus GAR</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@100..125,400..800&family=Graduate&display=swap" rel="stylesheet">
+<style>
+/* Campus GAR: identidad de Grupo Asesores RAM (azul marino de tinta, naranja de acento, Archivo) y el nombre Campus en letra universitaria. Layout: barra superior con logo y tablero en una sola columna ancha. */
+:root{
+  --bg:#F3F5F8; --card:#ffffff; --ink:#13233A; --muted:#5B6B7F; --line:#DCE2EA; --soft:#E8EEF6;
+  --accent:#16325A; --accent-ink:#ffffff; --gold:#B8520D; --orange:#EE7623;
+  --ok:#23845A; --ok-bg:#DDF2E7; --warn:#9A6505; --warn-bg:#FBF0D5; --bad:#C0402E; --bad-bg:#F9E1DC; --off:#6B7680; --off-bg:#ECEFF2;
+  --f-display:"Archivo",system-ui,sans-serif;
+  --f-body:"Archivo",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-college:"Graduate","Rockwell","Georgia",serif;
+  --logo-filter:none;
+  --r:10px;
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#0F1A2A; --card:#16243A; --ink:#E8EDF4; --muted:#9AAAC0; --line:#26395A; --soft:#1B2B44;
+    --accent:#8FB3E8; --accent-ink:#0F1A2A; --gold:#F4863C; --orange:#F4863C;
+    --ok:#4CC08A; --ok-bg:#173A2C; --warn:#E3AE3A; --warn-bg:#3A3118; --bad:#EE7A68; --bad-bg:#3E211E; --off:#8D999F; --off-bg:#1D2A3A;
+    --logo-filter:brightness(0) invert(.94);
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0F1A2A; --card:#16243A; --ink:#E8EDF4; --muted:#9AAAC0; --line:#26395A; --soft:#1B2B44;
+  --accent:#8FB3E8; --accent-ink:#0F1A2A; --gold:#F4863C; --orange:#F4863C;
+  --ok:#4CC08A; --ok-bg:#173A2C; --warn:#E3AE3A; --warn-bg:#3A3118; --bad:#EE7A68; --bad-bg:#3E211E; --off:#8D999F; --off-bg:#1D2A3A;
+  --logo-filter:brightness(0) invert(.94);
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font:15px/1.5 var(--f-body);-webkit-font-smoothing:antialiased}
+h1,h2,h3{font-family:var(--f-display);line-height:1.15;margin:0;text-wrap:balance;letter-spacing:-.01em}
+h1{font-size:26px} h2{font-size:19px} h3{font-size:15px;font-family:var(--f-body);font-weight:700}
+.num,td.n,.tnum{font-variant-numeric:tabular-nums}
+a{color:var(--accent)}
+button,input,select,textarea{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.top{position:sticky;top:0;z-index:20;background:var(--card);border-bottom:1px solid var(--line)}
+.top-in{max-width:1240px;margin:0 auto;padding:10px 20px;display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:12px;text-decoration:none;color:inherit}
+.logo{height:50px;width:auto;display:block;filter:var(--logo-filter)}
+.sep{width:1px;height:36px;background:var(--line)}
+.wordmark{display:flex;flex-direction:column;font-family:var(--f-college);font-size:33px;line-height:.95;text-transform:uppercase;letter-spacing:.05em;color:var(--accent);text-shadow:2px 2px 0 var(--orange)}
+.wordmark small{font-family:var(--f-body);font-size:10px;font-weight:700;letter-spacing:.24em;color:var(--muted);text-shadow:none;margin-top:4px}
+.kxw{font-family:"Graduate","Rockwell",Georgia,serif;font-size:26px;text-transform:uppercase;letter-spacing:.05em;color:#16325A;text-shadow:2px 2px 0 #EE7623;line-height:1}
+h1,h2{font-stretch:112%}
+.nav{display:flex;gap:4px;flex-wrap:wrap}
+.nav button{background:none;border:0;padding:7px 12px;border-radius:8px;cursor:pointer;color:var(--muted);font-weight:600}
+.nav button[aria-current="page"]{background:var(--soft);color:var(--accent)}
+.who{margin-left:auto}.sync{font-size:12.5px;color:var(--muted);display:flex;align-items:center;gap:6px}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--off)}
+.dot.ok{background:var(--ok)} .dot.warn{background:var(--warn)} .dot.bad{background:var(--bad)}
+main{max-width:1240px;margin:0 auto;padding:20px 20px 60px;display:grid;gap:18px}
+.banner{background:var(--warn-bg);color:var(--warn);border-radius:var(--r);padding:10px 14px;font-size:14px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:16px}
+.card > h2,.card > h3{margin-bottom:10px}
+.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.spread{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.grid{display:grid;gap:14px}
+.g2{grid-template-columns:repeat(auto-fit,minmax(320px,1fr))}
+.g3{grid-template-columns:repeat(auto-fit,minmax(240px,1fr))}
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px}
+.tile{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:12px 14px;cursor:pointer;text-align:left}
+.tile b{display:block;font-family:var(--f-display);font-size:26px;font-variant-numeric:tabular-nums}
+.tile span{color:var(--muted);font-size:13px}
+.tile.alert b{color:var(--bad)}
+.btn{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);background:var(--card);padding:7px 12px;border-radius:8px;cursor:pointer;font-weight:600;font-size:14px}
+.btn:hover{border-color:var(--accent)}
+.btn.primary{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.btn.danger{color:var(--bad)}
+.btn.sm{padding:4px 9px;font-size:13px}
+.btn[disabled]{opacity:.5;cursor:not-allowed}
+.link{background:none;border:0;padding:0;color:var(--accent);font-weight:700;cursor:pointer;text-align:left}
+.chip{display:inline-block;padding:2px 9px;border-radius:999px;background:var(--soft);color:var(--accent);font-size:12.5px;font-weight:600;white-space:nowrap}
+.chip.gold{background:color-mix(in srgb,var(--gold) 15%,transparent);color:var(--gold)}
+.pill{display:inline-flex;align-items:center;gap:6px;padding:2px 9px;border-radius:999px;font-size:12.5px;font-weight:700;white-space:nowrap}
+.pill::before{content:"";width:7px;height:7px;border-radius:50%;background:currentColor}
+.pill.ok{background:var(--ok-bg);color:var(--ok)} .pill.warn{background:var(--warn-bg);color:var(--warn)} .pill.bad{background:var(--bad-bg);color:var(--bad)} .pill.off{background:var(--off-bg);color:var(--off)}
+.muted{color:var(--muted)} .small{font-size:13px}
+.tblw{overflow-x:auto}
+table{border-collapse:collapse;width:100%}
+th,td{padding:8px 10px;border-bottom:1px solid var(--line);text-align:left;vertical-align:middle}
+th{font-size:12px;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);font-weight:700}
+td.n,th.n{text-align:right}
+tr.off td{opacity:.6}
+.bar{height:7px;border-radius:9px;background:var(--line);overflow:hidden;min-width:70px}
+.bar i{display:block;height:100%;background:var(--accent)}
+.filters{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+input[type=text],input[type=search],input[type=date],input[type=number],input[type=email],input[type=tel],input[type=url],select,textarea{border:1px solid var(--line);background:var(--bg);border-radius:7px;padding:6px 9px;min-width:0}
+textarea{width:100%;min-height:70px;resize:vertical}
+.f{display:grid;gap:3px;font-size:13px;color:var(--muted);font-weight:600}
+.f input,.f select,.f textarea{color:var(--ink);font-weight:500;font-size:14px;width:100%}
+.form{display:grid;gap:12px;grid-template-columns:repeat(auto-fill,minmax(200px,1fr))}
+.form .wide{grid-column:1/-1}
+.check{list-style:none;margin:0;padding:0;display:grid;gap:6px}
+.check li{display:flex;gap:9px;align-items:flex-start;font-size:14px}
+.check li .ic{flex:none;width:18px;height:18px;border-radius:5px;display:grid;place-items:center;font-size:12px;font-weight:800;margin-top:1px}
+.check li.ok .ic{background:var(--ok-bg);color:var(--ok)}
+.check li.no .ic{background:var(--warn-bg);color:var(--warn)}
+.check li.no{font-weight:600}
+.stepper{display:flex;gap:6px;flex-wrap:wrap}
+.step{flex:1 1 120px;border-radius:8px;padding:8px 10px;background:var(--off-bg);color:var(--off);font-size:13px;border:1px solid transparent}
+.step b{display:block;font-size:13.5px}
+.step.done{background:var(--ok-bg);color:var(--ok)}
+.step.cur{background:var(--card);color:var(--ink);border-color:var(--accent);box-shadow:0 0 0 1px var(--accent) inset}
+.tabs{display:flex;gap:2px;flex-wrap:wrap;border-bottom:1px solid var(--line)}
+.tabs button{background:none;border:0;border-bottom:2px solid transparent;padding:8px 12px;cursor:pointer;font-weight:600;color:var(--muted)}
+.tabs button[aria-selected="true"]{color:var(--accent);border-bottom-color:var(--accent)}
+.plazo{display:flex;justify-content:space-between;gap:8px;font-size:14px;padding:6px 0;border-top:1px dashed var(--line)}
+.score{display:flex;align-items:baseline;gap:10px}
+.score b{font-family:var(--f-display);font-size:38px;font-variant-numeric:tabular-nums}
+.kv{display:grid;grid-template-columns:auto 1fr;gap:4px 14px;font-size:14px}
+.kv dt{color:var(--muted)} .kv dd{margin:0;font-weight:600}
+.fx td input,.fx td select{width:100%}
+.fx td.c input{width:58px;text-align:center}
+tr.pend td:first-child{border-left:3px solid var(--warn)}
+.empty{padding:28px;text-align:center;color:var(--muted)}
+.chart svg{width:100%;height:auto;display:block}
+.chart .ax{stroke:var(--line)} .chart .lb{fill:var(--muted);font-size:11px} .chart .br{fill:var(--accent)} .chart .br.ok{fill:var(--ok)} .chart .mt{stroke:var(--gold);stroke-dasharray:5 4;stroke-width:1.5} .chart .ml{fill:var(--gold);font-size:11px;font-weight:700}
+.modal{position:fixed;inset:0;background:rgba(10,20,25,.45);display:grid;place-items:center;padding:16px;z-index:50}
+.modal[hidden]{display:none}
+.dlg{background:var(--card);border-radius:12px;max-width:620px;width:100%;max-height:90vh;overflow:auto;padding:20px;display:grid;gap:14px;border:1px solid var(--line)}
+.dlg.wide{max-width:900px}
+.toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:9px 16px;border-radius:9px;font-size:14px;z-index:60;max-width:90vw}
+.toast[hidden]{display:none}
+.file{display:flex;gap:8px;align-items:center;flex-wrap:wrap;font-size:13.5px}
+.file input[type=file]{font-size:12.5px;max-width:230px}
+.q{display:grid;gap:4px;padding:10px 0;border-top:1px solid var(--line)}
+.q p{margin:0}
+.av{border-radius:50%;object-fit:cover;background:var(--soft);color:var(--accent);display:inline-grid;place-items:center;font-weight:700;flex:none;overflow:hidden}
+.who{font-size:12.5px;color:var(--muted);display:flex;gap:6px;align-items:center}
+.kx{background:#fff;color:#14212b;padding:24px;border-radius:8px;font:14px/1.45 var(--f-body)}
+.kx h1{font-size:22px;color:#16325A}.kx h2{font-size:15px;margin:16px 0 6px;color:#16325A;border-bottom:2px solid #EE7623;padding-bottom:3px}
+.kx table{font-size:13px}.kx th,.kx td{padding:5px 8px;border-bottom:1px solid #dbe2e7;color:#14212b}
+.kx .note{font-size:12px;color:#5a6873}
+@media (max-width:560px){.logo{height:32px}.sep,.wordmark small{display:none}.wordmark{font-size:24px}h1{font-size:22px}.top-in{padding:10px 14px}main{padding:14px 14px 50px}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<header class="top"><div class="top-in">
+  <a class="brand" href="#equipo" data-nav="equipo" aria-label="Campus GAR, ir al equipo"><img id="brand-logo" class="logo" src="data:image/png;base64,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" alt="Grupo Asesores RAM"><span class="sep" aria-hidden="true"></span><span class="wordmark">Campus<small>Recluta y desarrollo</small></span></a>
+  <nav class="nav" id="nav">
+    <button data-nav="equipo">Equipo</button>
+    <button data-nav="generaciones">Generaciones</button>
+    <button data-nav="recursos">Recursos</button>
+    <button data-nav="configuracion">Configuración</button>
+  </nav>
+  <div class="who" id="who"></div>
+  <div class="sync" id="sync" style="margin-left:0"><i class="dot"></i><span>Conectando…</span></div>
+</div></header>
+<main id="app"><div class="empty">Cargando Campus…</div></main>
+<div class="modal" id="modal" hidden></div>
+<div class="toast" id="toast" hidden></div>
+<script>
+"use strict";
+/* ===== CONFIGURACIÓN: pega aquí la URL de tu aplicación web de Apps Script (termina en /exec) ===== */
+const API_URL="https://script.google.com/macros/s/AKfycbx69J8_lQr8fen5aIFCAjDn6ey2MUYQyw0fUNsDhuVTxQNaRo-EK7wsT0f1oh-wYRjRvQ/exec";
+/* ================================================================================================== */
+/* ---------- utilidades ---------- */
+const $=(s,el=document)=>el.querySelector(s);
+const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const pad=n=>String(n).padStart(2,"0");
+const toS=d=>`${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
+const todayISO=()=>toS(new Date());
+const toD=s=>{const [y,m,d]=String(s).split("-").map(Number);return new Date(y,m-1,d)};
+const addDays=(s,n)=>{const d=toD(s);d.setDate(d.getDate()+n);return toS(d)};
+const addMonths=(s,n)=>{const d=toD(s);const day=d.getDate();d.setDate(1);d.setMonth(d.getMonth()+n);const last=new Date(d.getFullYear(),d.getMonth()+1,0).getDate();d.setDate(Math.min(day,last));return toS(d)};
+const addBiz=(s,n)=>{const d=toD(s);let k=0;while(k<n){d.setDate(d.getDate()+1);const w=d.getDay();if(w!==0&&w!==6)k++}return toS(d)};
+const diff=(a,b)=>Math.round((toD(b)-toD(a))/86400000);
+const MES=["ene","feb","mar","abr","may","jun","jul","ago","sep","oct","nov","dic"];
+const fdate=s=>{if(!s)return "—";const d=toD(s);return `${d.getDate()} ${MES[d.getMonth()]} ${d.getFullYear()}`};
+const money=n=>"$"+Math.round(+n||0).toLocaleString("es-MX");
+const sum=a=>a.reduce((s,v)=>s+(+v.prima||0),0);
+const avg=a=>a.reduce((s,x)=>s+x,0)/a.length;
+const getP=(o,p)=>p.split(".").reduce((a,k)=>a==null?undefined:a[k],o);
+const setP=(o,p,v)=>{const ks=p.split(".");let a=o;ks.slice(0,-1).forEach(k=>{if(a[k]==null||typeof a[k]!=="object"||Array.isArray(a[k])&&isNaN(+k))a[k]={};a=a[k]});a[ks[ks.length-1]]=v};
+const uid=()=>Math.random().toString(36).slice(2,9)+Date.now().toString(36).slice(-4);
+const clone=o=>JSON.parse(JSON.stringify(o||{}));
+function isoWeek(s){const d=toD(s);const t=new Date(Date.UTC(d.getFullYear(),d.getMonth(),d.getDate()));const day=t.getUTCDay()||7;t.setUTCDate(t.getUTCDate()+4-day);const y=t.getUTCFullYear();const w=Math.ceil(((t-Date.UTC(y,0,1))/86400000+1)/7);return `${y}-W${pad(w)}`}
+function weekStart(s){const d=toD(s);const day=d.getDay()||7;d.setDate(d.getDate()-day+1);return toS(d)}
+function daysTxt(dl){if(dl<0)return `vencido hace ${-dl} d`;if(dl===0)return "vence hoy";return `faltan ${dl} d`}
+
+/* ---------- catálogo del proceso ---------- */
+const ETAPAS={1:"Reclutamiento",2:"Inducción",3:"Arranque rápido",4:"Agente provisional",5:"Cédula definitiva",6:"Agente activo"};
+const RUTAS={nuevo:[1,2,3,4,5,6],cedula:[1,2,3,6]};
+const RUTA_TXT={nuevo:"Agente nuevo",cedula:"Agente con Cédula"};
+const RAMOS=["Vida Individual","GMM","Autos","Hogar","Mascotas","Daños"];
+const VITALES=[["v1","Carácter e integridad"],["v2","IQ / sentido común"],["v3","Orientación al logro"],["v4","Alto nivel de energía"],["v5","Motivación por el dinero"],["v6","Perseverancia"]];
+const PERFIL=[["p1","Espíritu emprendedor"],["p2","Mercado natural"],["p3","Apoyo familiar"],["p4","Estabilidad financiera"],["p5","Título universitario"],["p6","Movilidad social"]];
+const TRANSV=[["t1","HDD (Hilo de Descontento)"],["t2","¿MA? (¿Me agrada?)"]];
+const HERR=[["h1","Pre-contrato (asimilación del bootcamp)"],["h2","Biografía"],["h3","Referencias"],["h4","Entrevistas en profundidad"],["h5","Opinión de agentes"],["h6","Intuición del líder"],["h7","Referencias (las de ellos)"],["h8","Opinión del cónyuge"],["h9","Antecedentes crediticios (con autorización)"],["h10","Test de aptitud (PSP)"]];
+const ACT=[["p","Prospectos nuevos",15],["c","Contactos efectivos para agendar",15],["ag","Citas iniciales agendadas",10],["re","Citas iniciales realizadas",8],["ci","Citas de cierre realizadas",3],["so","Solicitudes ingresadas",1]];
+const CONDUCTAS=[
+ ["planificacion","Planificación","¿Cómo organizarías una semana para lograr 15 prospectos nuevos y 10 citas agendadas? Cuéntame de un plan tuyo que haya funcionado y de uno que no, y qué cambiaste.","Si prioriza, si sus planes son realistas y si cumple plazos.","Orientación al logro"],
+ ["prospeccion","Prospección","Nombra 10 personas de tu Plan 200 a las que llamarías esta semana y por qué. ¿Cómo pides una cita sin que la llamada se vuelva solo social?","Si llega a pedir la cita y si su mercado natural es real.","Alto nivel de energía"],
+ ["necesidades","Análisis de necesidades","Enséñame qué le preguntarías a un papá de 35 años para saber si necesita un seguro de vida.","Si escucha y conduce la conversación sin divagar.","IQ / sentido común"],
+ ["presentaciones","Presentaciones","Explícame en 2 minutos por qué alguien debería tener Gastos Médicos Mayores. ¿Cómo te preparas cuando hablas frente a un grupo?","Claridad, brevedad y si evita los temas incómodos.","IQ / sentido común"],
+ ["cierre","Cierre","Cuéntame de una vez que convenciste a alguien de hacer algo que no quería. Si el cliente dice \"lo voy a pensar\", ¿qué le respondes?","Si pide la decisión o la evita, y si aguanta la presión.","Perseverancia y motivación por el dinero"],
+ ["objeciones","Manejo de objeciones","Un prospecto te dice \"está muy caro\". ¿Qué haces?","Si descubre la razón real o se pierde hablando.","Perseverancia"],
+ ["servicio","Seguimiento / servicio","¿Qué harías cuando a un cliente tuyo le rechacen un reembolso de GMM?","Si se hace cargo del cliente después de la venta.","Carácter e integridad"],
+ ["cruzada","Venta cruzada","Ya le vendiste vida a un cliente. ¿Qué más le ofrecerías y cómo detectas la oportunidad?","Si piensa en la cartera completa del cliente.","Orientación al logro"],
+ ["cumplimiento","Cumplimiento","Un cliente te pide que no declares una enfermedad para que salga más barato. ¿Qué le dices? ¿Qué harías si ves a un compañero romper una regla para vender?","Si reconoce la conducta indebida y actúa.","Carácter e integridad"]];
+const KO=[["k1","Falta de patrón de éxito"],["k2","Mercado natural débil, falta de contactos"],["k3","Falta de movilidad social"],["k4","Muchas deudas, deudor incobrable o quiebra reciente"],["k5","Culpa a los demás por su falta de éxito"],["k6","No tiene seguro de vida"],["k7","Recientemente divorciado"],["k8","Cambia de trabajo con demasiada frecuencia"],["k9","Problemas de salud"],["k10","Ve las ventas como un retroceso, no como oportunidad"],["k11","Satisfecho con el status quo"],["k12","Necesita “un trabajo” desesperada e inmediatamente"]];
+const koCount=p=>KO.filter(([k])=>(((p.adt||{}).ko||{})[k]||{}).marcado).length;
+const ROLES=["Gerente de Atracción de Talento","Gerente de Capacitación","Gerente Comercial","Gerente de Desarrollo","Director de Agencia"];
+const AREA={"Gerente de Atracción de Talento":[1],"Gerente de Capacitación":[2,5],"Gerente de Desarrollo":[3,4,6]};
+function avatar(p,n){const f=p.foto&&String(p.foto).startsWith("data:image/")?p.foto:"";const ini=(p.nombre||"?").split(/\s+/).filter(Boolean).slice(0,2).map(w=>w[0]).join("").toUpperCase();return f?`<img class="av" src="${esc(f)}" alt="Foto de ${esc(p.nombre||"")}" style="width:${n}px;height:${n}px">`:`<span class="av" aria-hidden="true" style="width:${n}px;height:${n}px;font-size:${Math.round(n*.38)}px">${esc(ini)}</span>`}
+const SALIDAS=["Descartado","Baja voluntaria","Separación por incumplimiento","En pausa","Suspendido","Agente Referidor"];
+const LV={bajo:40,moderado:70,alto:100,inferior:40,promedio:70,superior:100};
+const DEF_CONFIG={
+  documentos:["CV","Identificación oficial vigente","CURP","Comprobante de estudios (mínimo bachillerato concluido)","Comprobante de domicilio","Constancia de situación fiscal","Carátula de estado de cuenta con CLABE"],
+  cursosBase:[],gerentes:[],
+  comisiones:{"Vida Individual":30,"GMM":20,"Autos":10,"Hogar":10,"Mascotas":10,"Daños":10},
+  metas:{anio:2026,activoAnual:520000,activoTrimestral:130000,permNuevo:60000,permCedula:50000,provisional2m:120000,minGnp:60000,primaVidaGmm:16000,primaOtros:8000,primaCedula:16000,pago:3093}
+};
+
+/* ---------- estado ---------- */
+const S={db:null,user:null,assets:null,downloads:null,sample:null,canWrite:true,isAdmin:false,myId:null,demo:false,
+  personas:new Map(),config:clone(DEF_CONFIG),recursos:[],loaded:false,sync:"wait",
+  view:"equipo",openId:null,tab:null,filters:{q:"",etapa:"",ruta:"",estado:"activos",gerente:""},
+  pendingRender:false,names:{},reqNames:new Set(),rol:null,roles:{},myName:"",pin:null,me:null,pend:0};
+const cfg=()=>S.config; const M=()=>Object.assign({},DEF_CONFIG.metas,S.config.metas||{});
+const cur=()=>S.personas.get(S.openId);
+const route=p=>RUTAS[p.ruta]||RUTAS.nuevo;
+
+/* ---------- cálculos ---------- */
+function pspPts(ps){if(!ps||!LV[ps.rend]||!LV[ps.ventas]||!LV[ps.emp])return null;return Math.round(.5*LV[ps.rend]+.3*LV[ps.ventas]+.2*LV[ps.emp])}
+function scoreADT(p){
+  const a=p.adt||{},W={E1:.25,E2:.35,E3:.40};let vs=0,vw=0,ts=0,tw=0,last=null;
+  for(const E of ["E1","E2","E3"]){const f=(a[E]&&a[E].f)||{};
+    const v=VITALES.map(([k])=>+f[k]).filter(x=>x>0),t=TRANSV.map(([k])=>+f[k]).filter(x=>x>0);
+    if(v.length===6){vs+=W[E]*avg(v)*10;vw+=W[E];last=v}
+    if(t.length===2){ts+=W[E]*avg(t)*10;tw+=W[E]}}
+  const psp=pspPts(a.psp),vit=vw?vs/vw:null,tr=tw?ts/tw:null,ko=koCount(p);
+  const parts=[[psp,.6],[vit,.25],[tr,.15]].filter(x=>x[0]!=null);
+  if(!parts.length)return{score:null,psp,vit:null,tr:null,partial:true,ko,sem:ko>=3?{c:"bad",t:"No continuar: 3 o más factores Knock Out"}:null};
+  const ws=parts.reduce((s,x)=>s+x[1],0),score=Math.round(parts.reduce((s,x)=>s+x[0]*x[1],0)/ws);
+  const red=last?last.some(x=>x<=5):false;
+  let sem;if(ko>=3)sem={c:"bad",t:"No continuar: 3 o más factores Knock Out"};else if(red||score<65)sem={c:"bad",t:"Orientar como referidor externo"};else if(score<80)sem={c:"warn",t:"Proceder con precaución"};else sem={c:"ok",t:"Proceder"};
+  return{score,psp,vit:vit==null?null:Math.round(vit),tr:tr==null?null:Math.round(tr),red,ko,partial:parts.length<3,sem};
+}
+const vigente=s=>!!s&&s>=todayISO();
+function cedOk(p){return((p.docs||{}).ced||{}).estado==="Entregado"&&vigente((p.cedula||{}).vigencia)}
+function rcOk(p){return((p.docs||{}).rc||{}).estado==="Entregado"&&vigente((p.rc||{}).vigencia)}
+function expPct(p){const docs=cfg().documentos||[],d=p.docs||{},ced=p.ruta==="cedula";const total=docs.length+(ced?2:0);if(!total)return 0;
+  const ok=docs.filter((_,i)=>(d["d"+i]||{}).estado==="Entregado").length+(ced?(cedOk(p)?1:0)+(rcOk(p)?1:0):0);return Math.round(100*ok/total)}
+function expFaltan(p){const docs=cfg().documentos||[],d=p.docs||{};const L=docs.filter((_,i)=>(d["d"+i]||{}).estado!=="Entregado");if(p.ruta==="cedula"){if(!cedOk(p))L.push("Cédula de autorización vigente");if(!rcOk(p))L.push("Póliza de RC profesional vigente")}return L}
+function arranque(p){
+  const m=M(),vs=p.ventas||[],n1=vs.filter(v=>v.negocio==="1"),n2=vs.filter(v=>v.negocio==="2");
+  if(p.ruta==="cedula"){const s1=sum(n1),s2=sum(n2);return{ok1:s1>=m.primaCedula,ok2:s2>=m.primaCedula,d1:money(s1),d2:money(s2)}}
+  const ok1=n1.some(v=>v.ramo==="Vida Individual"&&+v.prima>=m.primaVidaGmm);
+  const ok2=n2.some(v=>(["Vida Individual","GMM"].includes(v.ramo)&&+v.prima>=m.primaVidaGmm)||(["Autos","Hogar","Mascotas","Daños"].includes(v.ramo)&&v.contado&&+v.prima>=m.primaOtros));
+  return{ok1,ok2,d1:money(sum(n1)),d2:money(sum(n2))};
+}
+const ventasEntre=(p,a,b)=>sum((p.ventas||[]).filter(v=>v.fecha&&v.fecha>=a&&v.fecha<b));
+function prov2m(p){const a=p.conexion&&p.conexion.alta;return a?ventasEntre(p,a,addMonths(a,2)):0}
+function paseComite(p){return((p.e4&&p.e4.comite)||[]).some(c=>c.acuerdo==="Pase autorizado"||c.acuerdo==="Pase al cierre del mes 2")}
+function mesAgente(p){const a=p.conexion&&p.conexion.alta;if(!a)return null;const t=todayISO();if(t<a)return{n:0,ini:a,fin:addMonths(a,1)};let n=0;while(addMonths(a,n+1)<=t)n++;return{n:n+1,ini:addMonths(a,n),fin:addMonths(a,n+1)}}
+function metasActivo(p){
+  const m=M(),t=todayISO(),y=t.slice(0,4),mo=+t.slice(5,7),q=Math.floor((mo-1)/3),c4=Math.floor((mo-1)/4);
+  const qi=`${y}-${pad(q*3+1)}-01`,qf=q===3?`${+y+1}-01-01`:`${y}-${pad(q*3+4)}-01`;
+  const ci=`${y}-${pad(c4*4+1)}-01`,cf=c4===2?`${+y+1}-01-01`:`${y}-${pad(c4*4+5)}-01`;
+  const ma=mesAgente(p);const perm=p.ruta==="cedula"?m.permCedula:m.permNuevo;
+  const vs=p.ventas||[];
+  return{perm,mes:ma?ventasEntre(p,ma.ini,ma.fin):0,ma,tri:ventasEntre(p,qi,qf),anio:ventasEntre(p,`${y}-01-01`,`${+y+1}-01-01`),
+    vidaTri:sum(vs.filter(v=>v.ramo==="Vida Individual"&&v.fecha>=qi&&v.fecha<qf)),
+    otrosCua:sum(vs.filter(v=>["GMM","Autos","Daños","Hogar","Mascotas"].includes(v.ramo)&&v.fecha>=ci&&v.fecha<cf)),
+    triTxt:`T${q+1} ${y}`,cuaTxt:`Cuatrimestre ${c4+1} ${y}`,qf,cf};
+}
+function I(t,ok,h){return{t,ok:!!ok,h}}
+function checklist(p){
+  const e=p.etapa||1,a=p.adt||{},m=M(),ced=p.ruta==="cedula",cart=p.cartas||{},e2=p.e2||{};
+  if(e===1){const herrOk=HERR.slice(1).filter(([k])=>((a.herr||{})[k]||{}).estado==="Realizada").length;
+    const L=[I("PSP capturado y confiable",(a.psp||{}).confiable==="si"&&pspPts(a.psp)!=null),I("Reporte PSP en PDF anexado",(a.psp||{}).pdf),I("Biografía o CV anexado",a.cv),
+      I("Entrevista 1 realizada",(a.E1||{}).fecha),I("Entrevista 2 realizada",(a.E2||{}).fecha),I("Entrevista 3 realizada",(a.E3||{}).fecha),
+      I(`Herramientas de evaluación (${herrOk} de 9)`,herrOk===9),I(`Menos de 3 factores Knock Out (lleva ${koCount(p)})`,koCount(p)<3),I("Decisión en E3: Aceptado",(a.E3||{}).decision==="Aceptado")];
+    if(!ced){L.push(I("Carta 1 firmada",(cart.c1||{}).fecha));L.push(I("Fecha de inicio capturada",a.fechaInicio))}
+    return L}
+  if(e===2){const docs=expPct(p);
+    if(ced)return[I("Gerente a cargo",e2.gerenteCargo),I("Sesiones de inducción registradas",(e2.sesiones||[]).length),I("Inducción concluida",e2.cierre),I("Carta 4 firmada",(cart.c4||{}).fecha),I("Expediente de conexión iniciado",docs>0)];
+    const cs=e2.cursos||[];
+    return[I("Generación asignada",e2.generacion),I("Asistencia de 80% o más",+e2.asistencia>=80),I("Bootcamp certificado",e2.certificado==="Sí"),I("Cursos de IDEAS completos",cs.length&&cs.every(c=>c.hecho)),I("Pre-contrato evaluado",((a.herr||{}).h1||{}).estado==="Realizada"),I("Expediente de conexión iniciado",docs>0)]}
+  if(e===3){const r=arranque(p);const L=[I("Negocio 1 cumple la regla",r.ok1,r.d1),I("Negocio 2 cumple la regla",r.ok2,r.d2),I(`Expediente de conexión al 100% (${expPct(p)}%)`,expPct(p)===100)];
+    if(ced){L.push(I("Cédula de autorización vigente y entregada",cedOk(p)));L.push(I("Póliza de RC profesional vigente y entregada",rcOk(p)))}
+    if(!ced)L.push(I(`Pago de ${money(m.pago)} validado por Reclutamiento`,((p.e3||{}).pago||{}).validado==="Sí"));
+    L.push(I("Alta de la conexión registrada",(p.conexion||{}).alta));return L}
+  if(e===4){const acc=prov2m(p),pase=paseComite(p);
+    return[I("Carta 2 firmada",(cart.c2||{}).fecha),I(`Producción meses 1 y 2: ${money(acc)} de ${money(m.provisional2m)}`,acc>=m.provisional2m||(pase&&acc>=m.minGnp)),I("Pase acordado por el Comité GAR",pase)]}
+  if(e===5){const sims=((p.e5||{}).simulacros||[]).map(s=>+s.cal||0),best=sims.length?Math.max(...sims):0;
+    return[I(`Simulacro con 70 o más (mejor: ${best||"—"})`,best>=70),I("Examen de cédula A aprobado",(((p.e5||{}).examen)||{}).resultado==="Aprobado"),I("Cédula definitiva registrada",(((p.e5||{}).cedula)||{}).numero),I("Cambio de esquema aprobado",(((p.e5||{}).cambio)||{}).aprobacion),I("Carta 3 firmada",(cart.c3||{}).fecha)]}
+  if(e===6){const k=metasActivo(p);
+    return[I(`Meta del mes agente: ${money(k.mes)} de ${money(k.perm)}`,k.mes>=k.perm),I(`Activo en ${k.triTxt}: ${money(k.tri)} de ${money(m.activoTrimestral)}`,k.tri>=m.activoTrimestral),I(`Activo total ${k.anio>=m.activoAnual?"logrado":"en el año"}: ${money(k.anio)} de ${money(m.activoAnual)}`,k.anio>=m.activoAnual)]}
+  return[];
+}
+function avance(p){const L=checklist(p);return L.length?Math.round(100*L.filter(i=>i.ok).length/L.length):0}
+function plazos(p){
+  const L=[],t=todayISO(),a=p.adt||{};
+  if(p.etapa===1&&a.E1&&a.E1.fecha&&!(a.E3&&a.E3.fecha))L.push({l:"E3 a más tardar (30 días)",d:addDays(a.E1.fecha,30)});
+  if(p.etapa===3&&p.e3&&p.e3.inicio){const ini=p.e3.inicio;
+    if(p.ruta==="cedula")L.push({l:"2 negocios (15 días hábiles)",d:addBiz(ini,15)});
+    else{const lim=p.e3.prorroga&&p.e3.prorroga.limite;L.push({l:lim?"Prórroga autorizada":"2 negocios (15 días)",d:lim||addDays(ini,15)})}}
+  const al=p.conexion&&p.conexion.alta;
+  if(al&&(p.etapa===4||p.etapa===5)){if(p.etapa===4)L.push({l:"Cierre del mes 2",d:addMonths(al,2)});L.push({l:"Vence el provisional",d:addMonths(al,3)})}
+  if(p.etapa===6&&p.e6&&p.e6.plan&&p.e6.plan.inicio&&p.e6.plan.resultado==="En curso")L.push({l:"Cierra el Plan de Acción",d:addMonths(p.e6.plan.inicio,1)});
+  if(p.ruta==="cedula"&&(p.etapa||1)>=2){const cv=(p.cedula||{}).vigencia,rv=(p.rc||{}).vigencia;
+    if(cv&&diff(t,cv)<=60)L.push({l:"Vence la cédula de autorización",d:cv});
+    if(rv&&diff(t,rv)<=60)L.push({l:"Vence la póliza de RC profesional",d:rv})}
+  return L.map(x=>Object.assign(x,{dl:diff(t,x.d)}));
+}
+function semaforo(p){
+  if(p.salida)return{c:"off",t:p.salida.tipo};
+  if(p.etapa===1){const s=scoreADT(p);const pl=plazos(p);if(s.ko>=3)return s.sem;if(pl.some(x=>x.dl<0))return{c:"bad",t:"Plazo vencido"};if(s.score!=null)return s.sem;return{c:"off",t:"Sin score"}}
+  const pl=plazos(p);const mn=pl.reduce((m,x)=>Math.min(m,x.dl),Infinity);
+  if(mn<0)return{c:"bad",t:"Plazo vencido"};
+  if(p.etapa===3&&p.e3&&p.e3.inicio&&p.ruta!=="cedula"){const d=diff(p.e3.inicio,todayISO());const r=arranque(p);if(d>=15&&!r.ok1&&!r.ok2)return{c:"bad",t:"Día 15 sin negocios"};if(d>15)return{c:"warn",t:"En prórroga"}}
+  if(mn<=3)return{c:"warn",t:"Plazo próximo"};
+  if(p.etapa===6){const k=metasActivo(p);if(p.e6&&p.e6.plan&&p.e6.plan.resultado==="En curso")return{c:"warn",t:"Plan de Acción"};if(k.ma&&k.mes<k.perm&&diff(todayISO(),k.ma.fin)<10)return{c:"warn",t:"Debajo de la meta del mes"}}
+  return{c:"ok",t:"En tiempo"};
+}
+function proxPlazo(p){const pl=plazos(p).sort((a,b)=>a.dl-b.dl);return pl[0]||null}
+
+/* ---------- persistencia ---------- */
+const queues={};
+function setSync(s){S.sync=s;const el=$("#sync");if(!el)return;const map={ok:["ok","En vivo"],wait:["","Conectando…"],err:["bad","No se pudo guardar"],off:["warn","Sin conexión con los datos"],demo:["warn","Vista de ejemplo"],save:["warn","Guardando…"],login:["","Sin sesión"]};const [c,t]=map[s]||map.wait;el.innerHTML=`<i class="dot ${c}"></i><span>${t}</span>`}
+function errMsg(e){if(e&&e.code==="pin")return "Tu PIN ya no es válido. Vuelve a entrar.";if(e&&e.message&&e.message!=="Failed to fetch")return e.message;return "No se pudo conectar con Campus. Revisa tu conexión e inténtalo de nuevo."}
+async function api(action,payload){
+  if(!API_URL)throw new Error("Falta configurar API_URL en index.html.");
+  const r=await fetch(API_URL,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify(Object.assign({action,pin:S.pin},payload||{}))});
+  let j;try{j=await r.json()}catch(e){throw new Error("La respuesta del servidor no es válida. Revisa la implementación de Apps Script.")}
+  if(!j.ok){const e=new Error(j.error||"Error del servidor.");e.code=j.code;throw e}
+  return j;
+}
+function save(id,keys){
+  const p=S.personas.get(id);if(!p)return;
+  if(S.demo){toast("Vista de ejemplo: los cambios no se guardan.");return}
+  const data={actualizado:todayISO()};keys.forEach(k=>{data[k]=p[k]===undefined?null:p[k]});
+  setSync("save");S.pend++;
+  queues[id]=(queues[id]||Promise.resolve()).then(()=>api("update",{id,data})).then(()=>setSync("ok")).catch(e=>{setSync("err");toast(errMsg(e));if(e.code==="pin")logout()}).finally(()=>{S.pend--});
+}
+function b64(file){return new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>res(String(r.result).split(",")[1]);r.onerror=rej;r.readAsDataURL(file)})}
+async function upload(file){
+  if(S.demo)throw new Error("Vista de ejemplo: los archivos no se guardan.");
+  if(file.size>10*1024*1024)throw new Error("El archivo pasa de 10 MB.");
+  const p=cur();const j=await api("upload",{name:file.name,mime:file.type,b64:await b64(file),persona:p?p.nombre:""});
+  return Object.assign({fecha:todayISO()},j.file);
+}
+const fileUrl=f=>f?(f.url||("/_blob/"+f.id)):"";
+
+/* ---------- UI genérica ---------- */
+let toastT;function toast(t){const el=$("#toast");el.textContent=t;el.hidden=false;clearTimeout(toastT);toastT=setTimeout(()=>el.hidden=true,3800)}
+function modal(html,wide){const m=$("#modal");m.innerHTML=`<div class="dlg ${wide?"wide":""}" role="dialog" aria-modal="true">${html}</div>`;m.hidden=false;const f=m.querySelector("input,select,textarea,button");if(f)f.focus()}
+function closeModal(){$("#modal").hidden=true;$("#modal").innerHTML=""}
+function ask(title,body,ok="Confirmar"){return new Promise(res=>{modal(`<h2>${esc(title)}</h2><p>${body}</p><div class="row" style="justify-content:flex-end"><button class="btn" data-ask="0">Cancelar</button><button class="btn primary" data-ask="1">${esc(ok)}</button></div>`);S._ask=res})}
+const ro=()=>S.canWrite===false?" disabled":"";
+function inp(label,path,val,type="text",extra=""){return `<label class="f"><span>${esc(label)}</span><input id="i-${path.replace(/\W/g,"-")}" type="${type}" data-path="${path}" value="${esc(val??"")}"${extra}${ro()}></label>`}
+function sel(label,path,val,opts,extra=""){return `<label class="f"><span>${esc(label)}</span><select id="i-${path.replace(/\W/g,"-")}" data-path="${path}"${extra}${ro()}>${opts.map(o=>{const [v,l]=Array.isArray(o)?o:[o,o];return `<option value="${esc(v)}"${String(val??"")===String(v)?" selected":""}>${esc(l)}</option>`}).join("")}</select></label>`}
+function area(label,path,val,cls="wide"){return `<label class="f ${cls}"><span>${esc(label)}</span><textarea id="i-${path.replace(/\W/g,"-")}" data-path="${path}"${ro()}>${esc(val??"")}</textarea></label>`}
+function fileField(label,path,f){
+  const has=f&&f.id;
+  return `<div class="f"><span>${esc(label)}</span><div class="file">${has?`<a href="${esc(fileUrl(f))}" target="_blank" rel="noopener">${esc(f.name||"Archivo")}</a><span class="muted">${fdate(f.fecha)}</span>`:`<span class="muted">Sin archivo</span>`}${(S.me||S.demo)&&S.canWrite!==false?`<input type="file" data-upload="${path}" aria-label="${esc(label)}" accept=".pdf,image/*">`:""}</div></div>`;
+}
+const pill=s=>`<span class="pill ${s.c}">${esc(s.t)}</span>`;
+
+/* ---------- vistas ---------- */
+function render(){
+  S.pendingRender=false;
+  document.querySelectorAll("#nav button").forEach(b=>b.setAttribute("aria-current",(!S.openId&&b.dataset.nav===S.view)?"page":"false"));
+  const app=$("#app");
+  let h=S.demo?`<div class="banner">Vista de ejemplo: falta conectar Campus con su hoja de Google. Sigue los pasos del README y pega la URL de Apps Script en API_URL dentro de index.html.</div>`:"";
+  if(S.sync==="off")h+=`<div class="banner">No se pudo actualizar la información. Campus volverá a intentarlo en un minuto.</div>`;
+  if(!S.demo&&!S.me){app.innerHTML=viewLogin();renderWho();const i=$("#login-pin");if(i)i.focus();return}
+  if(S.openId&&S.personas.get(S.openId))h+=viewFicha();
+  else{S.openId=null;h+=({equipo:viewEquipo,generaciones:viewGen,recursos:viewRec,configuracion:viewConfig}[S.view]||viewEquipo)()}
+  app.innerHTML=h;
+  if(S.openId)drawNames();renderWho();
+}
+function renderWho(){const el=$("#who");if(!el)return;el.innerHTML=S.me?`<span>${esc(S.me.nombre)} · ${esc(S.me.rol)}${S.me.admin?" · Administración":""}</span><button class="btn sm" data-act="logout">Salir</button>`:""}
+function viewLogin(){return `<div class="card" style="max-width:420px;margin:40px auto;display:grid;gap:14px"><div style="display:grid;justify-items:center;gap:10px;padding:6px 0 4px"><img class="logo" src="${LOGO()}" alt="Grupo Asesores RAM" style="height:70px"><span class="wordmark" style="font-size:46px;align-items:center">Campus<small>Recluta y desarrollo</small></span></div><h1 style="font-size:20px">Entrar</h1><p class="muted small" style="margin:0">Escribe el PIN que te asignó la administración de Campus. Tu nombre y tu rol se cargan solos.</p>
+  <form id="loginForm" class="grid" style="gap:10px"><label class="f"><span>PIN</span><input id="login-pin" type="password" inputmode="numeric" autocomplete="current-password" required></label>
+  <label class="row small"><input type="checkbox" id="login-rec"> Recordarme en este equipo</label>
+  <button class="btn primary" type="submit">Entrar</button><p id="login-err" class="small" style="color:var(--bad);margin:0"></p></form></div>`}
+function scheduleRender(){const a=document.activeElement;if(a&&a.closest&&a.closest("[data-live]")&&/INPUT|TEXTAREA|SELECT/.test(a.tagName)){S.pendingRender=true;return}render()}
+
+function viewEquipo(){
+  const all=[...S.personas.entries()].map(([id,p])=>({id,p}));
+  const act=all.filter(x=>!x.p.salida);
+  const cnt=e=>act.filter(x=>x.p.etapa===e).length;
+  const alertas=act.filter(x=>semaforo(x.p).c==="bad").length;
+  const expInc=act.filter(x=>(x.p.etapa||1)>=2&&expFaltan(x.p).length).length;
+  const F=S.filters,q=F.q.trim().toLowerCase();
+  let list=all.filter(({p})=>{
+    if(F.estado==="activos"&&p.salida)return false;if(F.estado==="salidas"&&!p.salida)return false;
+    if(F.etapa==="mia"){const ar=AREA[S.rol];if(ar&&!ar.includes(p.etapa||1))return false}else if(F.etapa&&String(p.etapa)!==F.etapa)return false;
+    if(F.exp&&!((p.etapa||1)>=2&&expFaltan(p).length))return false;if(F.ruta&&p.ruta!==F.ruta)return false;
+    if(F.gerente&&(p.gerente||"")!==F.gerente)return false;
+    if(F.sem&&semaforo(p).c!==F.sem)return false;
+    if(q&&!((p.nombre||"")+" "+(p.ciudad||"")+" "+((p.e2||{}).generacion||"")).toLowerCase().includes(q))return false;return true});
+  list.sort((a,b)=>(a.p.etapa||1)-(b.p.etapa||1)||(a.p.nombre||"").localeCompare(b.p.nombre||""));
+  const gerentes=[...new Set(all.map(x=>x.p.gerente).filter(Boolean))].sort();
+  const tile=(e)=>`<button class="tile" data-act="fEtapa" data-v="${e}"><b>${cnt(e)}</b><span>${e} · ${ETAPAS[e]}</span></button>`;
+  return `
+  <div class="spread"><h1>Equipo</h1>${S.canWrite!==false?`<button class="btn primary" data-act="nuevo">+ Registrar candidato</button>`:""}</div>
+  <div class="tiles">${[1,2,3,4,5,6].map(tile).join("")}<button class="tile alert" data-act="fAlert"><b>${alertas}</b><span>Con plazo vencido o en rojo</span></button><button class="tile ${expInc?"alert":""}" data-act="fExp"><b>${expInc}</b><span>Expediente de conexión incompleto</span></button></div>
+  <div class="card">
+   <div class="filters">
+    <input type="search" id="f-q" data-filter="q" placeholder="Buscar por nombre, ciudad o generación" value="${esc(F.q)}" style="flex:1 1 220px">
+    <select id="f-etapa" data-filter="etapa" aria-label="Etapa"><option value="">Todas las etapas</option>${AREA[S.rol]?`<option value="mia"${F.etapa==="mia"?" selected":""}>Mi área (${AREA[S.rol].join(", ")})</option>`:""}${[1,2,3,4,5,6].map(e=>`<option value="${e}"${F.etapa==String(e)?" selected":""}>${e} · ${ETAPAS[e]}</option>`).join("")}</select>
+    <select id="f-ruta" data-filter="ruta" aria-label="Ruta"><option value="">Ambas rutas</option><option value="nuevo"${F.ruta==="nuevo"?" selected":""}>Agente nuevo</option><option value="cedula"${F.ruta==="cedula"?" selected":""}>Agente con Cédula</option></select>
+    <select id="f-gerente" data-filter="gerente" aria-label="Gerente"><option value="">Todos los gerentes</option>${gerentes.map(g=>`<option${F.gerente===g?" selected":""}>${esc(g)}</option>`).join("")}</select>
+    <select id="f-sem" data-filter="sem" aria-label="Semáforo"><option value="">Todo semáforo</option><option value="bad"${F.sem==="bad"?" selected":""}>Rojo</option><option value="warn"${F.sem==="warn"?" selected":""}>Amarillo</option><option value="ok"${F.sem==="ok"?" selected":""}>Verde</option></select>
+    <select id="f-estado" data-filter="estado" aria-label="Estado"><option value="activos"${F.estado==="activos"?" selected":""}>En proceso</option><option value="salidas"${F.estado==="salidas"?" selected":""}>Salidas y suspendidos</option><option value="todos"${F.estado==="todos"?" selected":""}>Todos</option></select>
+   </div>
+  </div>
+  <div class="card tblw">${list.length?`<table><thead><tr><th>Nombre</th><th>Ruta</th><th>Etapa</th><th>Avance de la etapa</th><th>Semáforo</th><th>Expediente</th><th>Próximo plazo</th><th>Gerente</th></tr></thead><tbody>
+   ${list.map(({id,p})=>{const s=semaforo(p),pp=proxPlazo(p),av=avance(p);return `<tr class="${p.salida?"off":""}">
+    <td><div class="row" style="flex-wrap:nowrap">${avatar(p,32)}<div><button class="link" data-open="${id}">${esc(p.nombre||"Sin nombre")}</button><div class="muted small">${esc([p.ciudad,(p.e2||{}).generacion&&("Gen. "+p.e2.generacion)].filter(Boolean).join(" · "))}</div></div></div></td>
+    <td><span class="chip ${p.ruta==="cedula"?"gold":""}">${RUTA_TXT[p.ruta]||"Agente nuevo"}</span></td>
+    <td>${p.etapa||1} · ${ETAPAS[p.etapa||1]}</td>
+    <td><div class="row"><div class="bar" style="flex:1"><i style="width:${av}%"></i></div><span class="small tnum">${av}%</span></div></td>
+    <td>${pill(s)}</td>
+    <td>${(p.etapa||1)>=2?(()=>{const f=expFaltan(p).length;return f?`<span class="pill ${(p.etapa||1)>=3?"bad":"warn"}">Faltan ${f}</span>`:`<span class="pill ok">Completo</span>`})():`<span class="muted small">—</span>`}</td>
+    <td class="small">${pp?`${esc(pp.l)}<div class="muted">${fdate(pp.d)} · ${daysTxt(pp.dl)}</div>`:"—"}</td>
+    <td class="small">${esc(p.gerente||"—")}</td></tr>`}).join("")}
+  </tbody></table>`:`<div class="empty">${S.personas.size?"Nadie coincide con los filtros.":"Todavía no hay personas registradas. Usa “Registrar candidato” para empezar."}</div>`}</div>`;
+}
+
+function viewFicha(){
+  const p=cur(),r=route(p);
+  if(!S.tab||!tabsFor(p).some(t=>t[0]===S.tab))S.tab="e"+(p.etapa||1);
+  return `<div><button class="btn sm" data-act="close">← Volver al equipo</button></div>
+  <section id="fx-sum" class="grid">${fichaSummary(p)}</section>
+  <div class="card" style="padding:0 16px">
+   <div class="tabs" role="tablist">${tabsFor(p).map(([k,l])=>`<button role="tab" data-tab="${k}" aria-selected="${S.tab===k}">${l}</button>`).join("")}</div>
+   <div id="fx-tab" data-live style="padding:16px 0">${tabContent(p,S.tab)}</div>
+  </div>`;
+}
+function tabsFor(p){const r=route(p);const T=[["datos","Datos"]];r.forEach(e=>T.push(["e"+e,`${e} · ${ETAPAS[e]}`]));T.push(["ventas","Ventas"],["actividad","Actividad"],["expediente","Expediente"],["bitacora","Bitácora"]);if(p.salida&&p.salida.tipo==="Agente Referidor")T.push(["referidor","Referidor"]);return T}
+function fichaSummary(p){
+  const r=route(p),s=semaforo(p),L=checklist(p),pl=plazos(p),ma=mesAgente(p),sc=scoreADT(p);
+  const idx=r.indexOf(p.etapa||1),next=r[idx+1],allOk=L.length&&L.every(i=>i.ok);
+  const head=`<div class="card"><div class="spread">
+    <div class="row" style="align-items:flex-start;flex-wrap:nowrap;gap:14px">${avatar(p,72)}<div><h1>${esc(p.nombre||"Sin nombre")}</h1>
+     <div class="row small" style="margin-top:6px"><span class="chip ${p.ruta==="cedula"?"gold":""}">${RUTA_TXT[p.ruta]||"Agente nuevo"}</span><span class="chip">Etapa ${p.etapa||1} · ${ETAPAS[p.etapa||1]}</span>${pill(s)}
+     ${(p.e2||{}).generacion?`<span class="muted">Gen. ${esc(p.e2.generacion)}</span>`:""}${p.gerente?`<span class="muted">GD: ${esc(p.gerente)}</span>`:""}${ma&&ma.n?`<span class="muted">Mes agente ${ma.n}</span>`:""}</div></div></div>
+    <div class="row">${S.downloads||true?`<button class="btn" data-act="kardex">Estado de cuenta (kardex)</button>`:""}
+     ${S.canWrite!==false?(p.salida?`<button class="btn" data-act="reactivar">Reactivar</button>`:`<button class="btn" data-act="salida">Registrar salida</button>`):""}
+     ${S.isAdmin?`<button class="btn danger" data-act="borrar">Eliminar</button>`:""}</div></div>
+    ${p.salida?`<p class="banner" style="margin:12px 0 0">${esc(p.salida.tipo)} desde ${fdate(p.salida.fecha)}${p.salida.motivo?": "+esc(p.salida.motivo):""}${p.salida.tipo==="Suspendido"?". No puede ingresar ventas ni gestionar su cartera hasta reconectarse con cédula definitiva; si no reingresa, su cartera pasa a la clave puente de la agencia.":""}</p>`:""}
+  </div>`;
+  const fe=p.fechas||{};
+  const stepper=`<div class="stepper" aria-label="Avance por etapas">${r.map(e=>{const st=e<(p.etapa||1)?"done":e===(p.etapa||1)?"cur":"";return `<div class="step ${st}"><b>${e} · ${ETAPAS[e]}</b>${st==="cur"?`${avance(p)}% de la etapa`:fe["e"+e]?fdate(fe["e"+e]):"Pendiente"}</div>`}).join("")}</div>`;
+  const gate=`<div class="card"><h2>${next?`Para pasar a ${next} · ${ETAPAS[next]}`:"Seguimiento del agente activo"}</h2>
+    <ul class="check">${L.map(i=>`<li class="${i.ok?"ok":"no"}"><span class="ic">${i.ok?"✓":"!"}</span><span>${esc(i.t)}${i.h&&!i.ok?` <span class="muted small">(${esc(i.h)})</span>`:""}</span></li>`).join("")}</ul>
+    ${pl.length?`<div style="margin-top:10px">${pl.map(x=>`<div class="plazo"><span>${esc(x.l)}</span><span class="${x.dl<0?"pill bad":x.dl<=3?"pill warn":"muted"}">${fdate(x.d)} · ${daysTxt(x.dl)}</span></div>`).join("")}</div>`:""}
+    ${next&&S.canWrite!==false&&!p.salida?`<div class="row" style="margin-top:12px"><button class="btn primary" data-act="avanzar"${allOk||S.isAdmin?"":" disabled"}>Pasar a etapa ${next}</button>${!allOk?`<span class="muted small">${S.isAdmin?"Faltan pendientes: como administrador puedes pasarlo de todos modos.":"Se habilita al cumplir todos los pendientes."}</span>`:""}</div>`:""}
+  </div>`;
+  const koTxt=sc.ko?`<p class="small" style="margin:8px 0 0;color:${sc.ko>=3?"var(--bad)":"var(--warn)"}"><b>${sc.ko} factor${sc.ko>1?"es":""} Knock Out.</b> ${sc.ko>=3?"No continúa en el proceso.":"Revísalo en la siguiente entrevista."}</p>`:"";
+  const scoreCard=(p.etapa||1)<=2||sc.score!=null?`<div class="card"><h2>Score de reclutamiento</h2>${sc.score==null?`<p class="muted">Se calcula al capturar el PSP y las calificaciones de las entrevistas.</p>${sc.ko>=3?pill(sc.sem):""}${koTxt}`:koTxt+`
+    <div class="score"><b>${sc.score}</b><span>de 100${sc.partial?" · parcial":""}</span></div>${pill(sc.sem)}
+    <dl class="kv" style="margin-top:10px"><dt>PSP (60%)</dt><dd>${sc.psp??"—"}</dd><dt>Vitales (25%)</dt><dd>${sc.vit??"—"}</dd><dt>Transversales (15%)</dt><dd>${sc.tr??"—"}</dd></dl>
+    ${sc.red?`<p class="small" style="color:var(--bad);margin:8px 0 0">Un factor vital quedó en 5 o menos en la última entrevista.</p>`:""}`}</div>`:"";
+  const prodCard=p.conexion&&p.conexion.alta?`<div class="card chart"><h2>Producción por mes agente</h2>${chart(p)}</div>`:"";
+  const w=isoWeek(todayISO()),aw=(p.actividad||{})[w]||{};
+  const actCard=(p.etapa||1)>=3?`<div class="card"><h2>Actividad de esta semana</h2><table><tbody>${ACT.map(([k,l,meta])=>{const v=+aw[k]||0;return `<tr><td class="small">${l}</td><td class="n tnum">${v} / ${meta}</td><td style="width:90px"><div class="bar"><i style="width:${Math.min(100,100*v/meta)}%;background:${v>=meta?"var(--ok)":"var(--accent)"}"></i></div></td></tr>`}).join("")}</tbody></table></div>`:"";
+  const expCard=`<div class="card"><h2>Expediente y cartas</h2><div class="row"><div class="bar" style="flex:1"><i style="width:${expPct(p)}%"></i></div><span class="small tnum">${expPct(p)}% de documentos</span></div>
+    <ul class="check" style="margin-top:10px">${cartasDe(p).map(([k,l])=>{const c=(p.cartas||{})[k]||{};return `<li class="${c.fecha?"ok":"no"}"><span class="ic">${c.fecha?"✓":"·"}</span><span>${l}${c.fecha?` <span class="muted small">${fdate(c.fecha)}</span>`:""}</span></li>`}).join("")}</ul></div>`;
+  return head+stepper+`<div class="grid g2">${gate}${scoreCard||prodCard||actCard}</div><div class="grid g3">${scoreCard?prodCard:""}${scoreCard||prodCard?actCard:""}${expCard}</div>`;
+}
+function cartasDe(p){return p.ruta==="cedula"?[["c4","Carta 4 · Integración de Agente con Cédula"]]:[["c1","Carta 1 · Candidato Agente"],["c2","Carta 2 · Agente Provisional"],["c3","Carta 3 · Cambio de esquema"]]}
+function chart(p){
+  const a=p.conexion.alta,m=M(),ma=mesAgente(p);const n=Math.max(1,Math.min(ma?ma.n:1,24));const start=Math.max(1,n-5);
+  const meta=(p.etapa===4||p.etapa===5)?m.provisional2m/2:(p.ruta==="cedula"?m.permCedula:m.permNuevo);
+  const pts=[];for(let i=start;i<=n;i++){const ini=addMonths(a,i-1),fin=addMonths(a,i);pts.push({l:"M"+i,v:ventasEntre(p,ini,fin)})}
+  const W=560,H=190,pl=56,pb=26,pt=14,max=Math.max(meta,...pts.map(x=>x.v))*1.15||1;
+  const y=v=>pt+(H-pt-pb)*(1-v/max),bw=Math.min(54,(W-pl-10)/pts.length*.6);
+  const ticks=[0,max/2,max].map(v=>Math.round(v/1000)*1000);
+  return `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Producción por mes agente contra la meta de ${money(meta)}">
+   ${ticks.map(t=>`<line class="ax" x1="${pl}" x2="${W-6}" y1="${y(t)}" y2="${y(t)}"/><text class="lb" x="${pl-6}" y="${y(t)+4}" text-anchor="end">${t>=1000?Math.round(t/1000)+"k":t}</text>`).join("")}
+   ${pts.map((d,i)=>{const cx=pl+(i+.5)*(W-pl-10)/pts.length;return `<rect class="br ${d.v>=meta?"ok":""}" x="${cx-bw/2}" y="${y(d.v)}" width="${bw}" height="${Math.max(0,H-pb-y(d.v))}" rx="3"><title>${d.l}: ${money(d.v)}</title></rect><text class="lb" x="${cx}" y="${H-8}" text-anchor="middle">${d.l}</text>${d.v?`<text class="lb" x="${cx}" y="${y(d.v)-4}" text-anchor="middle">${Math.round(d.v/1000)}k</text>`:""}`}).join("")}
+   <line class="mt" x1="${pl}" x2="${W-6}" y1="${y(meta)}" y2="${y(meta)}"/><text class="ml" x="${W-8}" y="${y(meta)-5}" text-anchor="end">Meta ${money(meta)}</text></svg>
+   <p class="muted small" style="margin:6px 0 0">Prima pagada por mes agente (aniversario de la conexión: ${fdate(a)}).</p>`;
+}
+
+/* ---------- pestañas ---------- */
+function tabContent(p,t){
+  const ced=p.ruta==="cedula";
+  if(t==="datos")return `<div class="row" style="margin-bottom:14px;gap:14px">${avatar(p,88)}<div class="f"><span>Fotografía del alumno</span>${S.canWrite!==false?`<input type="file" accept="image/*" data-foto aria-label="Fotografía del alumno">`:""}<span class="muted small">Aparece en su ficha y en el kardex.${p.foto&&S.canWrite!==false?` <button class="link" data-act="quitarFoto">Quitar foto</button>`:""}</span></div></div><div class="form">
+    ${inp("Nombre completo","nombre",p.nombre)}${sel("Ruta de ingreso","ruta",p.ruta||"nuevo",[["nuevo","Agente nuevo"],["cedula","Agente con Cédula"]])}
+    ${inp("Teléfono","telefono",p.telefono,"tel")}${inp("Correo","correo",p.correo,"email")}${inp("Ciudad","ciudad",p.ciudad)}
+    ${sel("Modalidad","modalidad",p.modalidad,["","Presencial","En línea"])}${inp("Fuente de reclutamiento","fuente",p.fuente,"text",' list="dl-fuente"')}${inp("Referido por","referidoPor",p.referidoPor)}
+    ${inp("Gerente de Desarrollo asignado","gerente",p.gerente,"text",' list="dl-ger"')}${inp("Fecha de registro","fechas.e1",(p.fechas||{}).e1,"date")}
+    ${ced?inp("Cédula: tipo","cedula.tipo",(p.cedula||{}).tipo)+inp("Cédula: número","cedula.numero",(p.cedula||{}).numero)+inp("Cédula: vigencia","cedula.vigencia",(p.cedula||{}).vigencia,"date"):""}
+    </div><datalist id="dl-fuente"><option>Referido</option><option>Redes sociales</option><option>Bolsa de trabajo</option><option>Mercado natural del gerente</option><option>Evento</option></datalist><datalist id="dl-ger">${(cfg().gerentes||[]).map(g=>`<option>${esc(g)}</option>`).join("")}</datalist>`;
+  if(t==="e1")return tabE1(p);
+  if(t==="e2")return tabE2(p);
+  if(t==="e3")return tabE3(p);
+  if(t==="e4")return tabE4(p);
+  if(t==="e5")return tabE5(p);
+  if(t==="e6")return tabE6(p);
+  if(t==="ventas")return `<p class="muted small">Las primas por ramo las captura la Gerencia de Desarrollo con base en el reporte semanal de ventas. Todo en prima pagada.</p>${ventasTable(p,false)}`;
+  if(t==="actividad")return tabAct(p);
+  if(t==="expediente")return tabExp(p);
+  if(t==="bitacora")return listaNotas(p,"bitacora","Agregar una observación","Observación");
+  if(t==="referidor")return `<p class="muted small">Agente Referidor: socio comercial esporádico y externo. Lo lleva el Gerente de Desarrollo con seguimiento ligero.</p>${listaNotas(p,"referencias","Registrar un probable negocio o referencia de mercado","Probable negocio o referencia")}`;
+  return "";
+}
+function tabE1(p){
+  const a=p.adt||{},ps=a.psp||{},ced=p.ruta==="cedula";
+  const lvl=[["","—"],["bajo","Bajo"],["moderado","Moderado"],["alto","Alto"]];
+  const fac=(grupo,list)=>list.map(([k,l])=>`<tr><td class="small">${grupo}</td><td>${l}</td>${["E1","E2","E3"].map(E=>`<td class="c"><input type="number" min="1" max="10" step="1" aria-label="${l} ${E}" data-path="adt.${E}.f.${k}" value="${esc(((a[E]||{}).f||{})[k]??"")}"${ro()}></td>`).join("")}</tr>`).join("");
+  const alertas=CONDUCTAS.filter(([k])=>((ps.alertas||{})[k])==="alerta");
+  return `<div class="grid">
+  <div class="card"><h2>PSP: la prueba madre</h2><p class="muted small">Lo aplica la Gerencia de Reclutamiento. Captura los resultados del reporte y anexa el PDF.</p>
+   <div class="form">${sel("¿Puede interpretarse con seguridad?","adt.psp.confiable",ps.confiable,[["","—"],["si","Sí"],["no","No: volver a aplicar"]])}
+    ${sel("Estilo de ventas dominante","adt.psp.estilo",ps.estilo,["","Dinámico","Analítico","Interpersonal"])}
+    ${sel("Rendimiento de ventas general esperado","adt.psp.rend",ps.rend,[["","—"],["inferior","Inferior al promedio"],["promedio","Promedio"],["superior","Superior al promedio"]])}
+    ${sel("Eficacia de ventas","adt.psp.ventas",ps.ventas,lvl)}${sel("Eficacia empresarial","adt.psp.emp",ps.emp,lvl)}
+    <div class="f"><span>Puntos de PSP</span><b style="font-size:20px" class="tnum">${pspPts(ps)??"—"}</b></div>
+    ${inp("Impulsores (lo que lo motiva)","adt.psp.impulsores",ps.impulsores)}
+    ${fileField("Reporte PSP (PDF)","adt.psp.pdf",ps.pdf)}${fileField("Biografía o CV (PDF)","adt.cv",a.cv)}
+    ${!ced?inp("Fecha de inicio (carta 1)","adt.fechaInicio",a.fechaInicio,"date"):""}</div>
+   <h3 style="margin-top:14px">Conductas de venta según el PSP</h3>
+   <div class="tblw"><table><thead><tr><th>Conducta</th><th>Resultado en el PSP</th></tr></thead><tbody>${CONDUCTAS.map(([k,l])=>`<tr><td>${l}</td><td style="width:220px"><select aria-label="${l}" data-path="adt.psp.alertas.${k}"${ro()}>${[["","—"],["fortaleza","Fortaleza"],["alerta","Señal de alerta"]].map(([v,t])=>`<option value="${v}"${((ps.alertas||{})[k]||"")===v?" selected":""}>${t}</option>`).join("")}</select></td></tr>`).join("")}</tbody></table></div>
+  </div>
+  <div class="card"><h2>Guía para la entrevista de profundidad (E2)</h2>
+   ${ps.ia&&(ps.ia.recomendaciones||[]).length?`<h3>Recomendaciones para esta persona</h3><ul class="small">${ps.ia.recomendaciones.map(r=>`<li>${esc(r)}</li>`).join("")}</ul>`:""}
+   ${ps.ia&&(ps.ia.preguntas||[]).length?`<h3 style="margin-top:8px">Preguntas sugeridas a partir de su PSP</h3>${ps.ia.preguntas.map(q=>`<div class="q"><b>${esc(q.conducta||"")}</b><p>${esc(q.pregunta||"")}</p>${q.observar?`<p class="muted small">Observa: ${esc(q.observar)}</p>`:""}</div>`).join("")}<h3 style="margin-top:12px">Calificación por conducta en alerta</h3>`:""}
+   ${alertas.length?alertas.map(([k,l,q,o,f])=>`<div class="q"><b>${l}</b><p>${esc(q)}</p><p class="muted small">Observa: ${esc(o)} · Respalda: ${esc(f)}</p><div style="max-width:240px">${sel("Calificación en la E2","adt.E2.guia."+k,((a.E2||{}).guia||{})[k],["","Deficiente","Promedio","Excelente"])}</div></div>`).join(""):`<p class="muted">Marca arriba las conductas que el PSP señala como alerta y aquí aparecerán las preguntas para el entrevistador.</p>`}
+   ${ps.ia&&ps.ia.coaching?`<p class="small" style="margin-top:10px"><b>Nota de coaching para el Gerente de Desarrollo:</b> ${esc(ps.ia.coaching)}</p>`:ps.estilo==="Interpersonal"?`<p class="small" style="margin-top:10px"><b>Nota de coaching (Interpersonal):</b> lo mueven la aprobación y las relaciones. Responde mejor a orientación estructurada, paso a paso, con preguntas explícitas y sin presión por decidir rápido.</p>`:""}
+  </div>
+  <div class="card"><h2>Entrevistas</h2>
+   <div class="grid g3">${["E1","E2","E3"].map((E,i)=>{const e=a[E]||{};const tit=["E1 · Screening y PSP","E2 · Profundidad y Plan 200","E3 · Compromiso final"][i];const dec=E==="E3"?["","Aceptado","En espera","Descartado"]:["","Avanza","En espera","Descartado"];
+     return `<div class="grid" style="gap:8px"><h3>${tit}</h3>${inp("Fecha","adt."+E+".fecha",e.fecha,"date")}${inp("Entrevistador","adt."+E+".resp",e.resp)}${E==="E2"?inp("Contactos en el Plan 200","adt.E2.plan200",e.plan200,"number",' min="0"'):""}${sel("Decisión","adt."+E+".decision",e.decision,dec)}${area("Observaciones","adt."+E+".obs",e.obs,"")}</div>`}).join("")}</div>
+   <h3 style="margin-top:14px">Factores (1 a 10)</h3>
+   <div class="tblw fx"><table><thead><tr><th>Grupo</th><th>Factor</th><th>E1</th><th>E2</th><th>E3</th></tr></thead><tbody>${fac("Vital",VITALES)}${fac("Perfil",PERFIL)}${fac("Transversal",TRANSV)}</tbody></table></div>
+   <p class="muted small">Los factores de perfil se registran pero no suman al score.</p>
+  </div>
+  <div class="card"><div class="spread"><h2>Factores Knock Out</h2><span class="pill ${koCount(p)>=3?"bad":koCount(p)?"warn":"ok"}">${koCount(p)} de 12 · ${koCount(p)>=3?"No continuar":"Puede continuar"}</span></div>
+   <p class="muted small">Factores no deseables. Con 3 o más, el candidato no continúa aunque su score sea alto. Márcalos en cualquier entrevista con una nota breve. Los factores de deudas, divorcio y salud se registran solo como marcados, sin detalles.</p>
+   <div class="tblw"><table><thead><tr><th>Factor</th><th>Marcado</th><th>Entrevista</th><th>Nota</th></tr></thead><tbody>
+   ${KO.map(([k,l])=>{const x=(a.ko||{})[k]||{},sens=["k4","k7","k9"].includes(k);return `<tr class="${x.marcado?"pend":""}"><td>${l}</td><td><input type="checkbox" aria-label="${esc(l)}" data-path="adt.ko.${k}.marcado"${x.marcado?" checked":""}${ro()}></td><td style="width:110px"><select aria-label="Entrevista ${esc(l)}" data-path="adt.ko.${k}.en"${ro()}>${["","E1","E2","E3"].map(v=>`<option value="${v}"${(x.en||"")===v?" selected":""}>${v||"—"}</option>`).join("")}</select></td><td>${sens?`<span class="muted small">Sin detalles</span>`:`<input type="text" aria-label="Nota ${esc(l)}" data-path="adt.ko.${k}.nota" value="${esc(x.nota??"")}"${ro()}>`}</td></tr>`}).join("")}
+   </tbody></table></div></div>
+  <div class="card"><h2>Herramientas de evaluación</h2><div class="tblw"><table><thead><tr><th>Herramienta</th><th>Estado</th><th>Resultado</th><th>Nota</th></tr></thead><tbody>
+   ${HERR.map(([k,l])=>{const h=(a.herr||{})[k]||{};return `<tr class="${h.estado==="Realizada"?"":"pend"}"><td>${l}${k==="h1"?`<div class="muted small">Se completa en la etapa 2</div>`:""}</td><td style="width:150px"><select aria-label="Estado ${l}" data-path="adt.herr.${k}.estado"${ro()}>${["Pendiente","Realizada"].map(v=>`<option${(h.estado||"Pendiente")===v?" selected":""}>${v}</option>`).join("")}</select></td><td style="width:170px"><select aria-label="Resultado ${l}" data-path="adt.herr.${k}.resultado"${ro()}>${["","Favorable","Con reservas","Desfavorable"].map(v=>`<option value="${v}"${(h.resultado||"")===v?" selected":""}>${v||"—"}</option>`).join("")}</select></td><td><input type="text" aria-label="Nota ${l}" data-path="adt.herr.${k}.nota" value="${esc(h.nota??"")}"${ro()}></td></tr>`}).join("")}
+  </tbody></table></div></div>
+  ${!ced?`<div class="card"><h2>Carta 1 · Acuerdos y compromisos: Candidato Agente</h2><div class="form">${inp("Fecha de firma","cartas.c1.fecha",((p.cartas||{}).c1||{}).fecha,"date")}${fileField("Carta firmada","cartas.c1.file",((p.cartas||{}).c1||{}).file)}</div></div>`:""}
+  </div>`;
+}
+function tabE2(p){
+  const e=p.e2||{},a=p.adt||{},ced=p.ruta==="cedula";
+  if(ced)return `<div class="grid"><div class="card"><h2>Inducción personalizada del Agente con Cédula</h2><p class="muted small">El bootcamp es opcional. Un gerente lo toma a su cargo y le da un bootcamp o arranque comercial personalizado, que cierra con la carta 4.</p>
+   <div class="form">${inp("Gerente a cargo","e2.gerenteCargo",e.gerenteCargo,"text",' list="dl-ger2"')}${sel("Modalidad","e2.modalidadCed",e.modalidadCed,["","Bootcamp de la generación","Arranque comercial personalizado"])}${inp("Generación (si toma bootcamp)","e2.generacion",e.generacion)}${inp("Fecha de cierre de la inducción","e2.cierre",e.cierre,"date")}</div>
+   <datalist id="dl-ger2">${(cfg().gerentes||[]).map(g=>`<option>${esc(g)}</option>`).join("")}</datalist></div>
+   <div class="card"><h2>Sesiones</h2>${listaFilas(p,"e2.sesiones",[["fecha","Fecha","date"],["tema","Tema","text"]],"Agregar sesión")}</div>
+   <div class="card"><h2>Carta 4 · Integración de Agente con Cédula</h2><div class="form">${inp("Fecha de firma","cartas.c4.fecha",((p.cartas||{}).c4||{}).fecha,"date")}${fileField("Carta firmada","cartas.c4.file",((p.cartas||{}).c4||{}).file)}</div></div>
+   <p class="muted small">El expediente de conexión se arma desde ahora en la pestaña Expediente.</p></div>`;
+  const cs=e.cursos||[];
+  return `<div class="grid"><div class="card"><h2>Bootcamp</h2><p class="muted small">3 días en vivo por web y el resto es autoestudio. Asistencia mínima de 80%. Se acredita con la certificación y solo hay una oportunidad.</p>
+   <div class="form">${inp("Generación","e2.generacion",e.generacion,"text",' list="dl-gen"')}${inp("Inicio","e2.inicio",e.inicio,"date")}${inp("Fin","e2.fin",e.fin,"date")}${inp("Asistencia a los días en vivo (%)","e2.asistencia",e.asistencia,"number",' min="0" max="100"')}
+    ${sel("Certificación","e2.certificado",e.certificado,["","Sí","No"])}${inp("Fecha de certificación","e2.fechaCert",e.fechaCert,"date")}
+    ${sel("Pre-contrato: estado","adt.herr.h1.estado",((a.herr||{}).h1||{}).estado||"Pendiente",["Pendiente","Realizada"])}${sel("Pre-contrato: resultado","adt.herr.h1.resultado",((a.herr||{}).h1||{}).resultado,[["","—"],"Favorable","Con reservas","Desfavorable"])}</div>
+   <datalist id="dl-gen">${[...new Set([...S.personas.values()].map(x=>(x.e2||{}).generacion).filter(Boolean))].map(g=>`<option>${esc(g)}</option>`).join("")}</datalist>
+   ${e.certificado==="No"?`<p class="banner" style="margin-top:10px">No certificó: no hay reintentos. Registra su salida o, si conviene, oriéntalo como referidor externo.</p>`:""}</div>
+  <div class="card"><div class="spread"><h2>Cursos de IDEAS</h2><div class="row">${S.canWrite!==false&&(cfg().cursosBase||[]).length?`<button class="btn sm" data-act="cursosBase">Cargar lista base</button>`:""}${S.canWrite!==false?`<button class="btn sm" data-act="addCurso">+ Curso</button>`:""}</div></div>
+   <p class="muted small">Los captura la Gerencia de Capacitación. Lo pendiente queda resaltado.</p>
+   ${cs.length?`<div class="tblw"><table><thead><tr><th>Curso</th><th>Realizado</th><th>Fecha</th><th></th></tr></thead><tbody>${cs.map((c,i)=>`<tr class="${c.hecho?"":"pend"}"><td><input type="text" aria-label="Curso" data-path="e2.cursos.${i}.nombre" value="${esc(c.nombre)}" style="width:100%"${ro()}></td><td><input type="checkbox" aria-label="Realizado" data-path="e2.cursos.${i}.hecho"${c.hecho?" checked":""}${ro()}></td><td><input type="date" aria-label="Fecha" data-path="e2.cursos.${i}.fecha" value="${esc(c.fecha||"")}"${ro()}></td><td>${S.canWrite!==false?`<button class="btn sm danger" data-act="delRow" data-list="e2.cursos" data-i="${i}">Quitar</button>`:""}</td></tr>`).join("")}</tbody></table></div><p class="small">${cs.filter(c=>c.hecho).length} de ${cs.length} realizados</p>`:`<p class="muted">Sin cursos capturados.</p>`}</div>
+  <p class="muted small">El checklist de documentos para la conexión se entrega el primer día del bootcamp. Captúralo en la pestaña Expediente.</p></div>`;
+}
+function ventasTable(p,arr){
+  const vs=(p.ventas||[]).map((v,i)=>({v,i})).sort((a,b)=>(b.v.fecha||"").localeCompare(a.v.fecha||""));
+  const rows=arr?vs.filter(x=>x.v.negocio):vs;
+  const can=S.canWrite!==false&&!(p.salida&&p.salida.tipo==="Suspendido");
+  return `${p.salida&&p.salida.tipo==="Suspendido"?`<p class="banner">Agente suspendido: no se pueden registrar ventas nuevas.</p>`:""}
+  <div class="spread" style="margin:6px 0"><span class="muted small">${rows.length} registro(s) · ${money(sum(rows.map(x=>x.v)))} de prima pagada</span>${can?`<button class="btn sm" data-act="addVenta" data-arr="${arr?1:0}">+ Registrar venta</button>`:""}</div>
+  ${rows.length?`<div class="tblw"><table><thead><tr><th>Fecha</th><th>Ramo</th><th>Póliza o solicitud</th><th class="n">Prima pagada</th><th>De contado</th>${arr||p.etapa<=3?"<th>Negocio de arranque</th>":""}<th></th></tr></thead><tbody>
+   ${rows.map(({v,i})=>`<tr><td><input type="date" aria-label="Fecha" data-path="ventas.${i}.fecha" value="${esc(v.fecha||"")}"${ro()}></td>
+    <td><select aria-label="Ramo" data-path="ventas.${i}.ramo"${ro()}>${RAMOS.map(r=>`<option${v.ramo===r?" selected":""}>${r}</option>`).join("")}</select></td>
+    <td><input type="text" aria-label="Póliza" data-path="ventas.${i}.poliza" value="${esc(v.poliza||"")}"${ro()}></td>
+    <td class="n"><input type="number" min="0" step="1" aria-label="Prima" data-path="ventas.${i}.prima" value="${esc(v.prima??"")}" style="width:120px;text-align:right"${ro()}></td>
+    <td><input type="checkbox" aria-label="De contado" data-path="ventas.${i}.contado"${v.contado?" checked":""}${ro()}></td>
+    ${arr||p.etapa<=3?`<td><select aria-label="Negocio de arranque" data-path="ventas.${i}.negocio"${ro()}>${[["","—"],["1","Negocio 1"],["2","Negocio 2"]].map(([a,b])=>`<option value="${a}"${(v.negocio||"")===a?" selected":""}>${b}</option>`).join("")}</select></td>`:""}
+    <td>${S.canWrite!==false?`<button class="btn sm danger" data-act="delRow" data-list="ventas" data-i="${i}">Quitar</button>`:""}</td></tr>`).join("")}</tbody></table></div>`:`<p class="muted">Sin ventas registradas.</p>`}`;
+}
+function tabE3(p){
+  const e=p.e3||{},m=M(),ced=p.ruta==="cedula",r=arranque(p),pr=e.prorroga||{};
+  const maxP=e.inicio?addDays(e.inicio,30):"";
+  return `<div class="grid"><div class="card"><h2>Arranque rápido</h2>
+   <div class="form">${inp("Día 1 del arranque","e3.inicio",e.inicio,"date")}<div class="f"><span>Regla de su ruta</span><span style="color:var(--ink);font-weight:500">${ced?`2 negocios en 15 días hábiles, de ${money(m.primaCedula)} de prima pagada cada uno (en un ramo o combinando dos o más).`:`2 negocios en 15 días: uno de Vida Individual de ${money(m.primaVidaGmm)} y otro de Vida o GMM (${money(m.primaVidaGmm)}) o de Autos, Hogar o Mascotas (${money(m.primaOtros)} de contado). Prórroga máxima hasta el día 30.`}</span></div></div></div>
+  <div class="card"><h2>Negocios de arranque</h2><p class="small">Negocio 1: ${r.ok1?"cumple":"pendiente"} (${r.d1}) · Negocio 2: ${r.ok2?"cumple":"pendiente"} (${r.d2})</p>
+   <p class="muted small">Registra la venta y marca a qué negocio de arranque corresponde.${ced?" Varias ventas pueden sumar un mismo negocio.":""}</p>${ventasTable(p,true)}</div>
+  ${!ced?`<div class="card"><h2>Prórroga</h2><p class="muted small">La autoriza y registra el Gerente de Desarrollo. El límite no puede pasar del día 30${maxP?` (${fdate(maxP)})`:""}.</p><div class="form">${inp("Nuevo límite","e3.prorroga.limite",pr.limite,"date",maxP?` max="${maxP}"`:"")}${inp("Autorizó","e3.prorroga.autorizo",pr.autorizo)}${inp("Motivo","e3.prorroga.motivo",pr.motivo)}</div></div>
+   <div class="card"><h2>Pago de ${money(m.pago)}</h2><p class="muted small">Primera inversión y derechos CNSF. Lo valida la Gerencia de Reclutamiento.</p><div class="form">${sel("Validado","e3.pago.validado",(e.pago||{}).validado,["","Sí","No"])}${inp("Fecha","e3.pago.fecha",(e.pago||{}).fecha,"date")}</div></div>`:""}
+  <div class="card"><h2>Conexión ${ced?"definitiva":"provisional"}</h2><div class="form">${inp("Fecha de alta","conexion.alta",(p.conexion||{}).alta,"date")}${inp("Clave de agente","conexion.clave",(p.conexion||{}).clave)}</div><p class="muted small">La fecha de alta es el día 1 del calendario agente. El expediente debe estar al 100% (pestaña Expediente).</p></div></div>`;
+}
+function tabE4(p){
+  const a=(p.conexion||{}).alta,m=M();
+  const meses=a?[1,2,3].map(i=>({i,ini:addMonths(a,i-1),fin:addMonths(a,i)})):[];
+  let acc=0;
+  return `<div class="grid"><div class="card"><h2>Agente provisional (Agente Empleado)</h2><dl class="kv"><dt>Alta</dt><dd>${fdate(a)}</dd><dt>Cierre del mes 2</dt><dd>${a?fdate(addMonths(a,2)):"—"}</dd><dt>Vence el provisional</dt><dd>${a?fdate(addMonths(a,3)):"—"}</dd></dl>
+   ${a?`<div class="tblw" style="margin-top:10px"><table><thead><tr><th>Mes agente</th><th>Periodo</th><th class="n">Prima pagada</th><th class="n">Acumulado</th><th class="n">Meta acumulada</th></tr></thead><tbody>${meses.map(x=>{const v=ventasEntre(p,x.ini,x.fin);acc+=v;return `<tr><td>${x.i}</td><td class="small">${fdate(x.ini)} – ${fdate(addDays(x.fin,-1))}</td><td class="n">${money(v)}</td><td class="n">${money(acc)}</td><td class="n">${x.i===1?money(m.provisional2m/2):x.i===2?money(m.provisional2m):"Cambio de esquema"}</td></tr>`}).join("")}</tbody></table></div>`:`<p class="muted">Registra la fecha de alta en la etapa 3.</p>`}</div>
+  <div class="card"><h2>Carta 2 · Acuerdos de acompañamiento: Agente Provisional</h2><div class="form">${inp("Fecha de firma","cartas.c2.fecha",((p.cartas||{}).c2||{}).fecha,"date")}${fileField("Carta firmada","cartas.c2.file",((p.cartas||{}).c2||{}).file)}</div></div>
+  <div class="card"><h2>Comité GAR</h2><p class="muted small">Sesiona cada viernes. Con $120,000 en los meses 1 y 2 autoriza el pase al alcanzarlos o al cierre del mes 2; con $60,000 evalúa el caso.</p>
+   ${listaFilas(p,"e4.comite",[["fecha","Fecha de sesión","date"],["acuerdo","Acuerdo","sel",["","Pase autorizado","Pase al cierre del mes 2","En evaluación","Sin pase"]],["arranque","Arranque de la preparación","date"],["nota","Nota","text"]],"Registrar sesión")}</div></div>`;
+}
+function tabE5(p){
+  const e=p.e5||{},a=(p.conexion||{}).alta;
+  return `<div class="grid"><div class="card"><h2>Preparación para la cédula A</h2><p class="muted small">La coordina la Gerencia de Capacitación. Mínimo 70 en el Simulador Cédula A de GAR para autorizar la fecha de examen.${a?` El provisional vence el ${fdate(addMonths(a,3))}.`:""}</p>
+   ${listaFilas(p,"e5.simulacros",[["fecha","Fecha","date"],["cal","Calificación","number"]],"Registrar simulacro")}</div>
+  <div class="card"><h2>Examen, cédula y cambio de esquema</h2><div class="form">
+   ${inp("Fecha de examen","e5.examen.fecha",(e.examen||{}).fecha,"date")}${sel("Resultado","e5.examen.resultado",(e.examen||{}).resultado,["","Aprobado","No aprobado","Pendiente"])}${inp("Intento","e5.examen.intento",(e.examen||{}).intento,"number",' min="1"')}
+   ${inp("Número de cédula","e5.cedula.numero",(e.cedula||{}).numero)}${inp("Emisión","e5.cedula.emision",(e.cedula||{}).emision,"date")}${inp("Vigencia","e5.cedula.vigencia",(e.cedula||{}).vigencia,"date")}
+   ${inp("Solicitud de cambio de esquema","e5.cambio.solicitud",(e.cambio||{}).solicitud,"date")}${inp("Aprobación","e5.cambio.aprobacion",(e.cambio||{}).aprobacion,"date")}${inp("Nueva clave","e5.cambio.clave",(e.cambio||{}).clave)}</div>
+   <p class="muted small">Si el cambio no se concreta en el mes 3, registra la salida “Suspendido”.</p></div>
+  <div class="card"><h2>Carta 3 · Cambio de esquema</h2><div class="form">${inp("Fecha de firma","cartas.c3.fecha",((p.cartas||{}).c3||{}).fecha,"date")}${fileField("Carta firmada","cartas.c3.file",((p.cartas||{}).c3||{}).file)}</div></div></div>`;
+}
+function tabE6(p){
+  const k=metasActivo(p),m=M(),pl=(p.e6||{}).plan||{};
+  return `<div class="grid"><div class="card"><h2>Metas ${m.anio}</h2><div class="tblw"><table><thead><tr><th>Indicador</th><th class="n">Lleva</th><th class="n">Meta</th><th>Avance</th></tr></thead><tbody>
+   ${[["Mes agente "+(k.ma?k.ma.n:"—")+" (permanencia)",k.mes,k.perm],["Agente activo parcial · "+k.triTxt,k.tri,m.activoTrimestral],["Agente activo total · "+m.anio,k.anio,m.activoAnual]].map(([l,v,mt])=>`<tr><td>${l}</td><td class="n">${money(v)}</td><td class="n">${money(mt)}</td><td style="width:140px"><div class="bar"><i style="width:${Math.min(100,100*v/(mt||1))}%;background:${v>=mt?"var(--ok)":"var(--accent)"}"></i></div></td></tr>`).join("")}
+   </tbody></table></div>
+   <h3 style="margin-top:12px">Cortes de bonos en curso</h3><dl class="kv"><dt>Vida Individual · ${k.triTxt}</dt><dd>${money(k.vidaTri)}</dd><dt>GMM, Autos y Daños · ${k.cuaTxt}</dt><dd>${money(k.otrosCua)}</dd></dl>
+   <p class="muted small">Los requisitos de cada bono (negocios y prima) se cargan cada año en Configuración.</p></div>
+  <div class="card"><h2>Plan de Acción</h2><p class="muted small">Dura 1 mes. El Gerente de Desarrollo propone la meta para que el agente se reactive.</p><div class="form">${inp("Inicio","e6.plan.inicio",pl.inicio,"date")}${inp("Meta de reactivación (prima)","e6.plan.meta",pl.meta,"number",' min="0"')}${sel("Resultado","e6.plan.resultado",pl.resultado,["","En curso","Cumplido","No cumplido"])}${inp("Compromisos","e6.plan.compromisos",pl.compromisos)}</div>
+   ${pl.inicio?`<p class="small">Cierra el ${fdate(addMonths(pl.inicio,1))} · lleva ${money(ventasEntre(p,pl.inicio,addMonths(pl.inicio,1)))}${pl.meta?` de ${money(pl.meta)}`:""}.</p>`:""}</div></div>`;
+}
+function tabAct(p){
+  const t=todayISO(),weeks=[];for(let i=0;i<8;i++){const s=addDays(weekStart(t),-7*i);weeks.push({k:isoWeek(s),s})}
+  return `<p class="muted small">La captura el Gerente de Desarrollo en el corte semanal de equipo. Estándar: 15 · 15 · 10 · 8 · 3 · 1.</p>
+  <div class="tblw fx"><table><thead><tr><th>Semana</th>${ACT.map(([k,l,m])=>`<th class="n" title="${l}">${l.split(" ")[0]} ${l.split(" ")[1]||""}<div class="muted">meta ${m}</div></th>`).join("")}<th>Lunes 9:00</th><th>Planeación</th></tr></thead><tbody>
+  ${weeks.map(w=>{const a=(p.actividad||{})[w.k]||{};return `<tr><td class="small">${fdate(w.s)}</td>${ACT.map(([k,l,m])=>`<td class="c"><input type="number" min="0" aria-label="${l} semana ${w.s}" data-path="actividad.${w.k}.${k}" value="${esc(a[k]??"")}" style="${a[k]!==undefined&&a[k]!==""&&+a[k]<m?"border-color:var(--warn)":""}"${ro()}></td>`).join("")}<td><input type="checkbox" aria-label="Asistió lunes" data-path="actividad.${w.k}.lunes"${a.lunes?" checked":""}${ro()}></td><td><input type="checkbox" aria-label="Planeación semanal" data-path="actividad.${w.k}.plan"${a.plan?" checked":""}${ro()}></td></tr>`}).join("")}
+  </tbody></table></div>`;
+}
+function tabExp(p){
+  const docs=cfg().documentos||[],d=p.docs||{},est=["Pendiente","Entregado","Observado"];
+  const selE=(path,x,l)=>`<select aria-label="Estado ${esc(l)}" data-path="${path}"${ro()}>${est.map(v=>`<option${(x||"Pendiente")===v?" selected":""}>${v}</option>`).join("")}</select>`;
+  const falt=expFaltan(p);
+  return `<div class="spread"><p class="muted small" style="margin:0">El checklist se entrega el primer día del bootcamp. Los documentos no se suben a Campus: aquí solo se registra si ya se entregaron.</p>${falt.length?`<span class="pill ${(p.etapa||1)>=3?"bad":"warn"}">Faltan ${falt.length}</span>`:`<span class="pill ok">Expediente completo</span>`}</div>
+  <div class="tblw" style="margin-top:8px"><table><thead><tr><th>Documento</th><th>Estado</th><th>Fecha de entrega</th><th>Observación</th></tr></thead><tbody>
+  ${docs.map((n,i)=>{const x=d["d"+i]||{};return `<tr class="${x.estado==="Entregado"?"":"pend"}"><td>${esc(n)}</td><td style="width:150px">${selE("docs.d"+i+".estado",x.estado,n)}</td><td style="width:160px"><input type="date" aria-label="Fecha ${esc(n)}" data-path="docs.d${i}.fecha" value="${esc(x.fecha||"")}"${ro()}></td><td><input type="text" aria-label="Observación ${esc(n)}" data-path="docs.d${i}.obs" value="${esc(x.obs||"")}"${ro()}></td></tr>`}).join("")}
+  </tbody></table></div>
+  ${p.ruta==="cedula"?`<h3 style="margin-top:16px">Agente con Cédula</h3><p class="muted small">Nunca entra como provisional y no paga los ${money(M().pago)} de la cédula provisional. Verifica que ambos documentos estén vigentes.</p>
+  <div class="tblw"><table><thead><tr><th>Documento</th><th>Estado</th><th>Número</th><th>Vigencia</th></tr></thead><tbody>
+   ${[["ced","Cédula de autorización","cedula.numero",(p.cedula||{}).numero,"cedula.vigencia",(p.cedula||{}).vigencia],["rc","Póliza de responsabilidad civil profesional","rc.numero",(p.rc||{}).numero,"rc.vigencia",(p.rc||{}).vigencia]].map(([k,l,np,nv,vp,vv])=>{const x=d[k]||{},ok=x.estado==="Entregado"&&vigente(vv);return `<tr class="${ok?"":"pend"}"><td>${l}${vv?`<div>${vigente(vv)?`<span class="pill ok">Vigente</span>`:`<span class="pill bad">Vencida</span>`}</div>`:""}</td><td style="width:140px">${selE("docs."+k+".estado",x.estado,l)}</td><td><input type="text" aria-label="Número ${l}" data-path="${np}" value="${esc(nv||"")}"${ro()}></td><td><input type="date" aria-label="Vigencia ${l}" data-path="${vp}" value="${esc(vv||"")}"${ro()}></td></tr>`}).join("")}
+  </tbody></table></div>`:""}
+  <div class="spread" style="margin-top:16px"><h3>Otros documentos</h3>${S.canWrite!==false?`<button class="btn sm" data-act="addOtro">+ Agregar</button>`:""}</div>
+  ${(p.otros||[]).length?`<div class="tblw"><table><tbody>${(p.otros||[]).map((o,i)=>`<tr><td><input type="text" aria-label="Nombre del documento" data-path="otros.${i}.nombre" value="${esc(o.nombre||"")}" placeholder="Nombre del documento"${ro()}></td><td style="width:150px">${selE("otros."+i+".estado",o.estado,"otro documento")}</td><td>${S.canWrite!==false?`<button class="btn sm danger" data-act="delRow" data-list="otros" data-i="${i}">Quitar</button>`:""}</td></tr>`).join("")}</tbody></table></div>`:`<p class="muted small">Sin otros documentos.</p>`}`;
+}
+function listaFilas(p,path,cols,addLabel){
+  const arr=getP(p,path)||[];
+  return `${arr.length?`<div class="tblw"><table><thead><tr>${cols.map(c=>`<th>${c[1]}</th>`).join("")}<th></th></tr></thead><tbody>${arr.map((r,i)=>`<tr>${cols.map(([k,l,t,o])=>`<td>${t==="sel"?`<select aria-label="${l}" data-path="${path}.${i}.${k}"${ro()}>${o.map(v=>`<option value="${esc(v)}"${(r[k]||"")===v?" selected":""}>${esc(v||"—")}</option>`).join("")}</select>`:`<input type="${t}" aria-label="${l}" data-path="${path}.${i}.${k}" value="${esc(r[k]??"")}"${ro()}>`}</td>`).join("")}<td>${S.canWrite!==false?`<button class="btn sm danger" data-act="delRow" data-list="${path}" data-i="${i}">Quitar</button>`:""}</td></tr>`).join("")}</tbody></table></div>`:`<p class="muted small">Sin registros.</p>`}
+  ${S.canWrite!==false?`<button class="btn sm" style="margin-top:8px" data-act="addRow" data-list="${path}">+ ${esc(addLabel)}</button>`:""}`;
+}
+function listaNotas(p,key,ph,label){
+  const arr=(p[key]||[]).slice().reverse();
+  return `${S.canWrite!==false?`<div class="grid" style="gap:8px"><label class="f"><span>${esc(label)}</span><textarea id="nota-${key}" placeholder="${esc(ph)}"></textarea></label><div><button class="btn primary sm" data-act="addNota" data-key="${key}">Guardar</button></div></div>`:""}
+  <div style="margin-top:12px">${arr.length?arr.map(n=>`<div class="q"><span class="muted small">${fdate(n.fecha)} · <span>${esc(n.autor||"")}</span>${n.rol?` (${esc(n.rol)})`:""}</span><p>${esc(n.texto)}</p></div>`).join(""):`<p class="muted small">Sin registros.</p>`}</div>`;
+}
+
+/* ---------- generaciones, recursos y configuración ---------- */
+function viewGen(){
+  const G={};for(const [id,p] of S.personas){const g=(p.e2||{}).generacion||"Sin generación";(G[g]=G[g]||[]).push(p)}
+  const keys=Object.keys(G).sort((a,b)=>a==="Sin generación"?1:b==="Sin generación"?-1:b.localeCompare(a));
+  return `<div class="spread"><h1>Generaciones</h1><span class="muted small">Revisión semanal del Comité GAR (viernes)</span></div>
+  <div class="card tblw">${keys.length?`<table><thead><tr><th>Generación</th><th class="n">Total</th>${[1,2,3,4,5,6].map(e=>`<th class="n">${e} · ${ETAPAS[e]}</th>`).join("")}<th class="n">Salidas</th><th class="n">En rojo</th></tr></thead><tbody>
+  ${keys.map(g=>{const L=G[g],a=L.filter(p=>!p.salida);return `<tr><td><b>${esc(g)}</b></td><td class="n">${L.length}</td>${[1,2,3,4,5,6].map(e=>`<td class="n">${a.filter(p=>p.etapa===e).length||"·"}</td>`).join("")}<td class="n">${L.length-a.length||"·"}</td><td class="n">${a.filter(p=>semaforo(p).c==="bad").length||"·"}</td></tr>`}).join("")}</tbody></table>`:`<div class="empty">Sin datos todavía.</div>`}</div>
+  <p class="muted small">La generación se asigna en la etapa 2 (bootcamp).</p>`;
+}
+function viewRec(){
+  const etapas=[["general","General"],...[1,2,3,4,5,6].map(e=>[String(e),`${e} · ${ETAPAS[e]}`])];
+  const by=k=>S.recursos.filter(r=>(r.etapa||"general")===k).sort((a,b)=>(a.nombre||"").localeCompare(b.nombre||""));
+  return `<div class="spread"><h1>Recursos por etapa</h1></div>
+  ${S.isAdmin?`<div class="card"><h2>Subir un recurso</h2><form id="recForm" class="form">
+    <label class="f"><span>Etapa</span><select id="rec-etapa">${etapas.map(([v,l])=>`<option value="${v}">${l}</option>`).join("")}</select></label>
+    <label class="f"><span>Nombre</span><input id="rec-nombre" type="text" required placeholder="Presentación de la entrevista E1"></label>
+    <label class="f"><span>Para qué sirve</span><input id="rec-uso" type="text" placeholder="Guía para el entrevistador"></label>
+    <label class="f"><span>Archivo</span><input id="rec-file" type="file"></label>
+    <label class="f"><span>O enlace</span><input id="rec-url" type="url" placeholder="https://"></label>
+    <div class="f"><span>&nbsp;</span><button class="btn primary" type="submit">Guardar recurso</button></div></form></div>`:`<p class="muted small">Los recursos los administra Campus. Aquí puedes consultarlos y descargarlos.</p>`}
+  <div class="grid g2">${etapas.map(([k,l])=>{const L=by(k);return `<div class="card"><h2>${l}</h2>${L.length?`<table><tbody>${L.map(r=>`<tr><td><a href="${esc(r.file?fileUrl(r.file):r.url)}" target="_blank" rel="noopener"><b>${esc(r.nombre)}</b></a><div class="muted small">${esc(r.uso||"")}${r.fecha?" · "+fdate(r.fecha):""}</div></td>${S.isAdmin?`<td class="n"><button class="btn sm danger" data-act="delRec" data-id="${esc(r._id)}">Quitar</button></td>`:""}</tr>`).join("")}</tbody></table>`:`<p class="muted small">Sin recursos todavía.</p>`}</div>`}).join("")}</div>`;
+}
+function viewConfig(){
+  const c=cfg(),m=M(),dis=S.isAdmin?"":" disabled";
+  return `<div class="spread"><h1>Configuración</h1>${S.isAdmin?`<button class="btn primary" data-act="saveCfg">Guardar configuración</button>`:""}</div>
+  ${S.isAdmin?"":`<p class="banner">Solo la administración de Campus puede cambiar la configuración. Los usuarios, sus roles y sus PIN se administran en la hoja “Usuarios” de Campus.</p>`}
+  <div class="grid g2">
+   <div class="card"><h2>Metas ${esc(m.anio)}</h2><p class="muted small">Se usan las de 2026 hasta cargar las de 2027 en enero.</p><div class="form">
+    ${[["anio","Año de las metas"],["activoAnual","Agente activo total (anual)"],["activoTrimestral","Agente activo parcial (trimestral)"],["permNuevo","Permanencia mensual · agente nuevo"],["permCedula","Permanencia mensual · Agente con Cédula"],["provisional2m","Provisional: acumulado meses 1 y 2"],["minGnp","Mínimo GNP para evaluación del Comité"],["primaVidaGmm","Prima mínima Vida y GMM"],["primaOtros","Prima mínima otros ramos (contado)"],["primaCedula","Prima por negocio · carta 4"],["pago","Pago de primera inversión y CNSF"]].map(([k,l])=>`<label class="f"><span>${l}</span><input type="number" id="cfg-m-${k}" data-cfg="metas.${k}" value="${esc(m[k])}"${dis}></label>`).join("")}</div></div>
+   <div class="card"><h2>Comisiones promedio por ramo (%)</h2><p class="muted small">Para el ingreso estimado del kardex. Es aproximado: depende del producto, las campañas, la forma de pago y los plazos.</p><div class="form">${RAMOS.map(r=>`<label class="f"><span>${r}</span><input type="number" id="cfg-c-${r.replace(/\W/g,"")}" data-cfg="comisiones.${r}" value="${esc((c.comisiones||{})[r]??"")}"${dis}></label>`).join("")}</div></div>
+   <div class="card"><h2>Documentos para la conexión</h2><p class="muted small">Uno por renglón. “Otros documentos” siempre está disponible en cada expediente.</p><textarea id="cfg-docs" data-cfg-list="documentos" rows="8"${dis}>${esc((c.documentos||[]).join("\n"))}</textarea></div>
+   <div class="card"><h2>Lista base de cursos de IDEAS</h2><p class="muted small">Uno por renglón. La Gerencia de Capacitación la carga en cada persona y la ajusta.</p><textarea id="cfg-cursos" data-cfg-list="cursosBase" rows="8"${dis}>${esc((c.cursosBase||[]).join("\n"))}</textarea></div>
+   <div class="card"><h2>Gerentes</h2><p class="muted small">Uno por renglón. Aparecen como sugerencia al asignar gerente.</p><textarea id="cfg-ger" data-cfg-list="gerentes" rows="6"${dis}>${esc((c.gerentes||[]).join("\n"))}</textarea></div>
+   <div class="card"><h2>Requisitos de bonos ${esc(m.anio)}</h2><p class="muted small">Negocios y prima de cada bono. Cortes: Vida trimestral; GMM, Autos y Daños cuatrimestral.</p><textarea id="cfg-bonos" data-cfg-text="bonos" rows="6" placeholder="Ejemplo: Vida T1: 3 negocios y $90,000"${dis}>${esc(c.bonos||"")}</textarea></div>
+  </div>`;
+}
+
+/* ---------- kardex ---------- */
+function kardexBody(p){
+  const m=M(),c=cfg(),vs=(p.ventas||[]).slice().sort((a,b)=>(a.fecha||"").localeCompare(b.fecha||"")),r=route(p),fe=p.fechas||{};
+  const a=(p.conexion||{}).alta,ini=a||(vs[0]&&vs[0].fecha);
+  const meses=ini?Math.max(1,Math.ceil(diff(ini,todayISO())/30.4)):1;
+  const tot=sum(vs),com=vs.reduce((s,v)=>s+(+v.prima||0)*((+(c.comisiones||{})[v.ramo]||0)/100),0);
+  const byM={};vs.forEach(v=>{const k=(v.fecha||"").slice(0,7);if(!k)return;byM[k]=byM[k]||{};byM[k][v.ramo]=(byM[k][v.ramo]||0)+(+v.prima||0)});
+  const L=checklist(p),pl=plazos(p),idx=r.indexOf(p.etapa||1),next=r[idx+1];
+  const cs=(p.e2||{}).cursos||[];const sims=((p.e5||{}).simulacros||[]);
+  const ma=mesAgente(p),k=metasActivo(p);
+  const fechasClave=[];
+  if(a&&p.ruta!=="cedula"&&(p.etapa===4||p.etapa===5)){fechasClave.push(["Cierre del mes 2",addMonths(a,2)]);fechasClave.push(["Vence el provisional (cambio de esquema en el mes 3)",addMonths(a,3)])}
+  fechasClave.push(["Corte del bono de Vida",addDays(k.qf,-1)],["Corte de bonos de GMM, Autos y Daños",addDays(k.cf,-1)],["Corte de agente activo total",`${todayISO().slice(0,4)}-12-31`]);
+  return `<div class="kx"><div style="display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap"><div style="display:flex;gap:14px;align-items:center">${p.foto&&String(p.foto).startsWith("data:image/")?`<img src="${esc(p.foto)}" alt="" style="width:92px;height:92px;border-radius:50%;object-fit:cover">`:""}<div><h1>Estado de cuenta académico y comercial</h1><div><b>${esc(p.nombre||"")}</b> · ${RUTA_TXT[p.ruta]||"Agente nuevo"}</div></div></div><div style="text-align:right;display:grid;gap:6px;justify-items:end"><img src="${LOGO()}" alt="Grupo Asesores RAM" style="height:44px"><div class="kxw">Campus</div><div class="note">Emitido el ${fdate(todayISO())}</div></div></div>
+  <h2>Datos</h2><table><tbody><tr><td>Generación</td><td>${esc((p.e2||{}).generacion||"—")}</td><td>Gerente de Desarrollo</td><td>${esc(p.gerente||"—")}</td></tr><tr><td>Ingreso a Campus</td><td>${fdate(fe.e1)}</td><td>Conexión</td><td>${fdate(a)}${ma&&ma.n?` · mes agente ${ma.n}`:""}</td></tr></tbody></table>
+  <h2>Trayectoria</h2><table><tbody>${r.map(e=>`<tr><td>${e} · ${ETAPAS[e]}</td><td>${e<(p.etapa||1)?"Concluida":e===(p.etapa||1)?"En curso":"Por venir"}</td><td>${fe["e"+e]?"Desde "+fdate(fe["e"+e]):""}</td></tr>`).join("")}</tbody></table>
+  <h2>Académico</h2><table><tbody>
+   ${p.ruta!=="cedula"?`<tr><td>Bootcamp</td><td>Asistencia ${esc((p.e2||{}).asistencia??"—")}% · Certificación: ${esc((p.e2||{}).certificado||"pendiente")}</td></tr>`:`<tr><td>Inducción personalizada</td><td>${esc((p.e2||{}).modalidadCed||"—")} · ${(p.e2||{}).cierre?"concluida "+fdate(p.e2.cierre):"en curso"}</td></tr>`}
+   <tr><td>Cursos de IDEAS</td><td>${cs.length?`${cs.filter(x=>x.hecho).length} de ${cs.length} realizados${cs.some(x=>!x.hecho)?". Pendientes: "+esc(cs.filter(x=>!x.hecho).map(x=>x.nombre).join(", ")):""}`:"Sin cursos capturados"}</td></tr>
+   ${p.ruta!=="cedula"?`<tr><td>Cédula A</td><td>${sims.length?`Mejor simulacro: ${Math.max(...sims.map(s=>+s.cal||0))} (mínimo 70)`:"Sin simulacros"} · Examen: ${esc(((p.e5||{}).examen||{}).resultado||"pendiente")}</td></tr>`:""}
+  </tbody></table>
+  <h2>Expediente de conexión</h2><p>${expFaltan(p).length?"Documentos pendientes: "+esc(expFaltan(p).join(", ")):"Completo."}</p>
+  <h2>Compromisos vigentes</h2><table><tbody>${cartasDe(p).map(([kk,l])=>{const cc=(p.cartas||{})[kk]||{};return `<tr><td>${l}</td><td>${cc.fecha?"Firmada el "+fdate(cc.fecha):"Pendiente"}</td></tr>`}).join("")}
+   <tr><td>Actividad semanal</td><td>15 prospectos · 15 contactos · 10 citas agendadas · 8 citas realizadas · 3 cierres · 1 solicitud</td></tr>
+   <tr><td>Asistencia</td><td>Sesión de los lunes 9:00 (obligatoria) y planeación semanal</td></tr>
+   <tr><td>Producción</td><td>${p.etapa<=3?(p.ruta==="cedula"?`2 negocios de ${money(m.primaCedula)} en 15 días hábiles; después ${money(m.permCedula)} mensuales`:`2 negocios en 15 días (Vida ${money(m.primaVidaGmm)} y complementario)`):p.etapa===4||p.etapa===5?`${money(m.provisional2m)} acumulados en los meses 1 y 2`:`${money(k.perm)} mensuales de prima pagada integral`}</td></tr></tbody></table>
+  <h2>Récord de ventas</h2>${Object.keys(byM).length?`<table><thead><tr><th>Mes</th>${RAMOS.map(x=>`<th style="text-align:right">${x}</th>`).join("")}<th style="text-align:right">Total</th></tr></thead><tbody>${Object.keys(byM).sort().map(mm=>{const row=byM[mm];const t=Object.values(row).reduce((s,x)=>s+x,0);return `<tr><td>${MES[+mm.slice(5)-1]} ${mm.slice(0,4)}</td>${RAMOS.map(x=>`<td style="text-align:right">${row[x]?money(row[x]):""}</td>`).join("")}<td style="text-align:right"><b>${money(t)}</b></td></tr>`}).join("")}</tbody></table>`:`<p class="note">Sin ventas registradas.</p>`}
+  <h2>Ingreso promedio</h2><table><tbody><tr><td>Prima pagada total</td><td>${money(tot)}</td></tr><tr><td>Prima pagada promedio mensual</td><td>${money(tot/meses)}</td></tr><tr><td>Comisión estimada promedio mensual</td><td><b>${money(com/meses)}</b></td></tr></tbody></table>
+  <p class="note">Cifra aproximada con porcentajes promedio (Vida ${c.comisiones?.["Vida Individual"]??30}%, GMM ${c.comisiones?.GMM??20}%, Autos y Daños ${c.comisiones?.Autos??10}%). El ingreso real depende del producto, las campañas, la forma de pago y los plazos.</p>
+  <h2>Lo que viene</h2><p>${next?`Siguiente etapa: <b>${next} · ${ETAPAS[next]}</b>. Para pasar necesitas:`:"Seguimiento como agente activo. Tus metas:"}</p>
+  <ul>${L.filter(i=>!i.ok).map(i=>`<li>${esc(i.t)}</li>`).join("")||"<li>Todo cumplido en esta etapa.</li>"}</ul>
+  <table><tbody>${[...pl.map(x=>[x.l,x.d]),...fechasClave].map(([l,d])=>`<tr><td>${esc(l)}</td><td>${fdate(d)}</td></tr>`).join("")}</tbody></table>
+  <div style="display:flex;gap:40px;margin-top:40px;flex-wrap:wrap"><div style="flex:1;border-top:1px solid #14212b;padding-top:6px;min-width:200px">Gerente de Desarrollo</div><div style="flex:1;border-top:1px solid #14212b;padding-top:6px;min-width:200px">Agente</div></div></div>`;
+}
+const LOGO=()=>{const i=document.getElementById("brand-logo");return i?i.src:""};
+const KX_CSS=`@import url("https://fonts.googleapis.com/css2?family=Graduate&family=Archivo:wght@400;600;700&display=swap");.kxw{font-family:"Graduate",Rockwell,Georgia,serif;font-size:26px;text-transform:uppercase;letter-spacing:.05em;color:#16325A;text-shadow:2px 2px 0 #EE7623;line-height:1}body{margin:0;background:#fff;font:14px/1.45 "Archivo","Segoe UI",system-ui,sans-serif;color:#13233A}.kx{max-width:860px;margin:0 auto;padding:28px}h1{font-size:22px;color:#16325A;margin:0}h2{font-size:15px;margin:18px 0 6px;color:#16325A;border-bottom:2px solid #EE7623;padding-bottom:3px}table{border-collapse:collapse;width:100%;font-size:13px}th,td{padding:5px 8px;border-bottom:1px solid #dbe2e7;text-align:left}.note{font-size:12px;color:#5a6873}@media print{.kx{padding:0}}`;
+
+/* ---------- eventos ---------- */
+document.addEventListener("click",async ev=>{
+  const t=ev.target.closest("[data-nav],[data-open],[data-act],[data-tab],[data-ask]");if(!t)return;
+  if(t.dataset.ask!==undefined){const r=S._ask;S._ask=null;closeModal();if(r)r(t.dataset.ask==="1");return}
+  if(t.dataset.nav){S.view=t.dataset.nav;S.openId=null;try{location.hash=S.view}catch(e){}render();window.scrollTo(0,0);return}
+  if(t.dataset.open){S.openId=t.dataset.open;S.tab=null;render();window.scrollTo(0,0);return}
+  if(t.dataset.tab){S.tab=t.dataset.tab;$("#fx-tab").innerHTML=tabContent(cur(),S.tab);document.querySelectorAll(".tabs button").forEach(b=>b.setAttribute("aria-selected",b.dataset.tab===S.tab));drawNames();return}
+  const a=t.dataset.act,p=cur(),id=S.openId;
+  if(a==="close"){S.openId=null;render();return}
+  if(a==="fEtapa"){S.filters.exp=false;S.filters.etapa=t.dataset.v;S.filters.estado="activos";S.filters.sem="";render();return}
+  if(a==="fExp"){S.filters.exp=true;S.filters.etapa="";S.filters.sem="";S.filters.estado="activos";render();return}
+  if(a==="logout"){logout();return}
+  if(a==="quitarFoto"){p.foto=null;save(id,["foto"]);refreshTab();refreshSum();return}
+  if(a==="fAlert"){S.filters.exp=false;S.filters.sem="bad";S.filters.etapa="";S.filters.estado="activos";render();return}
+  if(a==="nuevo")return nuevoModal();
+  if(a==="crear")return crearPersona();
+  if(a==="cancel")return closeModal();
+  if(a==="kardex"){modal(`<div class="spread"><h2>Estado de cuenta (kardex)</h2><div class="row"><button class="btn primary" data-act="kxPrint">Imprimir o guardar PDF</button><button class="btn" data-act="kxSave">Descargar HTML</button><button class="btn" data-act="cancel">Cerrar</button></div></div><p class="muted small">No incluye el score de reclutamiento ni el PSP, que son confidenciales.</p>${kardexBody(p)}`,true);return}
+  if(a==="kxPrint"){const w=window.open("","_blank");if(!w){toast("Tu navegador bloqueó la ventana. Permite ventanas emergentes para Campus.");return}w.document.write(`<!DOCTYPE html><html lang="es"><head><meta charset="utf-8"><title>Kardex ${esc(p.nombre||"")}</title><style>${KX_CSS}</style></head><body>${kardexBody(p)}<script>setTimeout(()=>window.print(),400)<\/script></body></html>`);w.document.close();return}
+  if(a==="kxSave"){const html=`<!DOCTYPE html><html lang="es"><head><meta charset="utf-8"><title>Kardex ${esc(p.nombre||"")}</title><style>${KX_CSS}</style></head><body>${kardexBody(p)}</body></html>`;
+    const url=URL.createObjectURL(new Blob([html],{type:"text/html"}));const l=document.createElement("a");l.href=url;l.download=`Kardex ${p.nombre||"agente"} ${todayISO()}.html`;document.body.appendChild(l);l.click();l.remove();setTimeout(()=>URL.revokeObjectURL(url),2000);return}
+  if(a==="avanzar"){const r=route(p),nx=r[r.indexOf(p.etapa||1)+1];if(!nx)return;const L=checklist(p);
+    if(!L.every(i=>i.ok)){const ok=await ask("Pasar con pendientes",`Faltan ${L.filter(i=>!i.ok).length} pendientes de la etapa ${p.etapa}. ¿Pasar a ${nx} · ${ETAPAS[nx]} de todos modos?`,"Pasar de etapa");if(!ok)return}
+    p.etapa=nx;p.fechas=Object.assign({},p.fechas,{["e"+nx]:todayISO()});
+    if(nx===3){p.e3=p.e3||{};if(!p.e3.inicio)p.e3.inicio=(p.ruta==="cedula"?(p.e2||{}).cierre:((p.e2||{}).fechaCert||(p.e2||{}).fin))||todayISO()}
+    save(id,["etapa","fechas","e3"]);S.tab="e"+nx;render();toast(`Pasó a la etapa ${nx} · ${ETAPAS[nx]}.`);return}
+  if(a==="salida"){modal(`<h2>Registrar salida</h2><div class="form"><label class="f"><span>Tipo</span><select id="s-tipo">${SALIDAS.map(s=>`<option>${s}</option>`).join("")}</select></label><label class="f"><span>Fecha</span><input id="s-fecha" type="date" value="${todayISO()}"></label><label class="f wide"><span>Motivo</span><textarea id="s-motivo"></textarea></label></div><p class="muted small">Suspendido: provisional vencido sin cambio de esquema. No puede ingresar ventas ni gestionar su cartera; si no reingresa, su cartera pasa a la clave puente de la agencia.</p><div class="row" style="justify-content:flex-end"><button class="btn" data-act="cancel">Cancelar</button><button class="btn primary" data-act="salidaOk">Registrar</button></div>`);return}
+  if(a==="salidaOk"){p.salida={tipo:$("#s-tipo").value,fecha:$("#s-fecha").value||todayISO(),motivo:$("#s-motivo").value.trim()};closeModal();save(id,["salida"]);render();return}
+  if(a==="reactivar"){const ok=await ask("Reactivar",`${esc(p.nombre)} vuelve a la etapa ${p.etapa} · ${ETAPAS[p.etapa]}.`,"Reactivar");if(!ok)return;p.bitacora=(p.bitacora||[]).concat([{id:uid(),fecha:todayISO(),autor:S.me?S.me.nombre:"",texto:`Reactivado. Salida previa: ${p.salida.tipo} (${fdate(p.salida.fecha)}).`}]);p.salida=null;save(id,["salida","bitacora"]);render();return}
+  if(a==="borrar"){const ok=await ask("Eliminar expediente",`Se borra el expediente de ${esc(p.nombre)} para todos. Esto no se puede deshacer.`,"Eliminar");if(!ok)return;S.openId=null;if(!S.demo){try{await api("delete",{id});S.personas.delete(id);toast("Expediente eliminado.")}catch(e){toast(errMsg(e))}}else{S.personas.delete(id)}render();return}
+  if(a==="addRow"){const path=t.dataset.list;const arr=(getP(p,path)||[]).slice();arr.push({id:uid()});setP(p,path,arr);save(id,[path.split(".")[0]]);refreshTab();return}
+  if(a==="delRow"){const path=t.dataset.list,i=+t.dataset.i;const ok=await ask("Quitar registro","Se quita este renglón para todos.","Quitar");if(!ok)return;const arr=(getP(p,path)||[]).slice();arr.splice(i,1);setP(p,path,arr);save(id,[path.split(".")[0]]);refreshTab();refreshSum();return}
+  if(a==="addVenta"){if(p.salida&&p.salida.tipo==="Suspendido")return;const v={id:uid(),fecha:todayISO(),ramo:"Vida Individual",prima:"",contado:false,negocio:""};if(t.dataset.arr==="1"){const r=arranque(p);v.negocio=r.ok1?"2":"1"}p.ventas=(p.ventas||[]).concat([v]);save(id,["ventas"]);refreshTab();refreshSum();return}
+  if(a==="addCurso"){p.e2=p.e2||{};p.e2.cursos=(p.e2.cursos||[]).concat([{id:uid(),nombre:"",hecho:false}]);save(id,["e2"]);refreshTab();return}
+  if(a==="cursosBase"){p.e2=p.e2||{};const have=new Set((p.e2.cursos||[]).map(c=>c.nombre));p.e2.cursos=(p.e2.cursos||[]).concat((cfg().cursosBase||[]).filter(n=>!have.has(n)).map(n=>({id:uid(),nombre:n,hecho:false})));save(id,["e2"]);refreshTab();refreshSum();return}
+  if(a==="addOtro"){p.otros=(p.otros||[]).concat([{id:uid(),nombre:""}]);save(id,["otros"]);refreshTab();return}
+  if(a==="addNota"){const k=t.dataset.key,el=$("#nota-"+k),tx=el.value.trim();if(!tx)return;p[k]=(p[k]||[]).concat([{id:uid(),fecha:todayISO(),autor:S.me?S.me.nombre:"",rol:S.rol||"",texto:tx}]);save(id,[k]);refreshTab();return}
+  if(a==="delRec"){const ok=await ask("Quitar recurso","Se quita para todos los gerentes.","Quitar");if(!ok)return;try{await api("delRecurso",{id:t.dataset.id});S.recursos=S.recursos.filter(r=>r._id!==t.dataset.id);render()}catch(e){toast(errMsg(e))}return}
+  if(a==="saveCfg")return saveConfig();
+});
+document.addEventListener("change",async ev=>{
+  const el=ev.target;
+  if(el.dataset.filter){S.filters[el.dataset.filter]=el.value;S.filters.exp=false;render();return}
+  if(el.hasAttribute("data-foto")){const f=el.files&&el.files[0];if(!f)return;try{const url=await fotoData(f);const p=cur();p.foto=url;save(S.openId,["foto"]);refreshTab();refreshSum();toast("Fotografía guardada.")}catch(e){toast("No se pudo leer la imagen. Prueba con un JPG o PNG.")}return}
+  if(el.dataset.upload){const f=el.files&&el.files[0];if(!f)return;const p=cur(),id=S.openId;toast("Subiendo archivo…");try{const r=await upload(f);setP(p,el.dataset.upload,r);save(id,[el.dataset.upload.split(".")[0]]);refreshTab();refreshSum();toast("Archivo guardado.")}catch(e){toast(e.message||"No se pudo subir el archivo.")}return}
+  if(el.dataset.path){const p=cur();if(!p)return;let v=el.type==="checkbox"?el.checked:el.value;
+    if(el.type==="number"&&v!=="")v=+v;
+    if(el.dataset.path==="e3.prorroga.limite"&&v&&p.e3&&p.e3.inicio&&v>addDays(p.e3.inicio,30)){toast("La prórroga no puede pasar del día 30.");el.value=(p.e3.prorroga||{}).limite||"";return}
+    setP(p,el.dataset.path,v);const top=el.dataset.path.split(".")[0];save(S.openId,[top]);
+    if(top==="ruta"||el.dataset.path==="adt.psp.alertas"||el.dataset.path.startsWith("adt.psp.alertas")||el.dataset.path.startsWith("adt.ko.")||el.dataset.path==="e2.certificado"){refreshTab()}
+    refreshSum();return}
+});
+document.addEventListener("input",ev=>{if(ev.target.dataset.filter==="q"){S.filters.q=ev.target.value;clearTimeout(S._qt);S._qt=setTimeout(()=>{const pos=ev.target.selectionStart;render();const q=$("#f-q");if(q){q.focus();try{q.setSelectionRange(pos,pos)}catch(e){}}},250)}});
+document.addEventListener("focusout",()=>{setTimeout(()=>{const a=document.activeElement;if(S.pendingRender&&!(a&&a.closest&&a.closest("[data-live]")&&/INPUT|TEXTAREA|SELECT/.test(a.tagName)))render()},0)});
+document.addEventListener("submit",async ev=>{if(ev.target.id!=="recForm")return;ev.preventDefault();
+  const nombre=$("#rec-nombre").value.trim();if(!nombre){toast("Escribe el nombre del recurso.");return}
+  const f=$("#rec-file").files[0],url=$("#rec-url").value.trim();if(!f&&!url){toast("Elige un archivo o escribe un enlace.");return}
+  try{let file=null;if(f){toast("Subiendo archivo…");file=await upload(f)}
+    const rec={etapa:$("#rec-etapa").value,nombre,uso:$("#rec-uso").value.trim(),file,url:url||null,fecha:todayISO()};
+    const j=await api("addRecurso",{recurso:rec});S.recursos.push(Object.assign({_id:j.id},rec));render();toast("Recurso guardado.")}catch(e){toast(errMsg(e))}});
+document.addEventListener("submit",async ev=>{if(ev.target.id!=="loginForm")return;ev.preventDefault();const pin=$("#login-pin").value.trim();if(!pin)return;$("#login-err").textContent="Entrando…";
+  try{await login(pin,$("#login-rec").checked)}catch(e){$("#login-err").textContent=e.code==="pin"?"PIN no válido o usuario inactivo.":errMsg(e)}});
+document.addEventListener("keydown",ev=>{if(ev.key==="Escape"&&!$("#modal").hidden){if(S._ask){S._ask(false);S._ask=null}closeModal()}});
+window.addEventListener("hashchange",()=>{const h=location.hash.slice(1);if(["equipo","generaciones","recursos","configuracion"].includes(h)){S.view=h;S.openId=null;render()}});
+function refreshTab(){const el=$("#fx-tab");if(el&&cur())el.innerHTML=tabContent(cur(),S.tab);drawNames()}
+function refreshSum(){const el=$("#fx-sum");if(el&&cur())el.innerHTML=fichaSummary(cur())}
+function nuevoModal(){modal(`<h2>Registrar candidato</h2><div class="form">
+  <label class="f wide"><span>Nombre completo</span><input id="n-nombre" type="text" required></label>
+  <label class="f"><span>Ruta</span><select id="n-ruta"><option value="nuevo">Agente nuevo</option><option value="cedula">Agente con Cédula</option></select></label>
+  <label class="f"><span>Teléfono</span><input id="n-tel" type="tel"></label><label class="f"><span>Correo</span><input id="n-correo" type="email"></label>
+  <label class="f"><span>Ciudad</span><input id="n-ciudad" type="text"></label><label class="f"><span>Fuente</span><input id="n-fuente" type="text" list="dl-fn"></label>
+  <label class="f"><span>Gerente de Desarrollo</span><input id="n-ger" type="text" list="dl-gn"></label></div>
+  <datalist id="dl-fn"><option>Referido</option><option>Redes sociales</option><option>Bolsa de trabajo</option><option>Mercado natural del gerente</option><option>Evento</option></datalist><datalist id="dl-gn">${(cfg().gerentes||[]).map(g=>`<option>${esc(g)}</option>`).join("")}</datalist>
+  <div class="row" style="justify-content:flex-end"><button class="btn" data-act="cancel">Cancelar</button><button class="btn primary" data-act="crear">Registrar</button></div>`)}
+async function crearPersona(){
+  const nombre=$("#n-nombre").value.trim();if(!nombre){toast("Escribe el nombre.");return}
+  const d={nombre,ruta:$("#n-ruta").value,telefono:$("#n-tel").value.trim(),correo:$("#n-correo").value.trim(),ciudad:$("#n-ciudad").value.trim(),fuente:$("#n-fuente").value.trim(),gerente:$("#n-ger").value.trim(),etapa:1,fechas:{e1:todayISO()},creado:todayISO(),creadoPor:S.myId||"",salida:null};
+  closeModal();
+  d.creadoPor=S.me?S.me.nombre:"";
+  if(S.demo){const id=uid();S.personas.set(id,d);S.openId=id;S.tab="e1";render();return}
+  try{const j=await api("create",{data:d});S.personas.set(j.id,clone(d));S.openId=j.id;S.tab="e1";render();toast("Candidato registrado.")}catch(e){toast(errMsg(e))}
+}
+async function saveConfig(){
+  const c=clone(S.config);c.metas=Object.assign({},DEF_CONFIG.metas,c.metas);
+  document.querySelectorAll("[data-cfg]").forEach(el=>{const v=el.value===""?null:+el.value;setP(c,el.dataset.cfg,v)});
+  document.querySelectorAll("[data-cfg-list]").forEach(el=>{c[el.dataset.cfgList]=el.value.split("\n").map(s=>s.trim()).filter(Boolean)});
+  document.querySelectorAll("[data-cfg-text]").forEach(el=>{c[el.dataset.cfgText]=el.value});
+  if(S.demo){S.config=c;toast("Vista de ejemplo: la configuración no se guarda.");render();return}
+  try{await api("config",{config:c});S.config=c;toast("Configuración guardada.");render()}catch(e){toast(errMsg(e))}
+}
+async function drawNames(){}
+
+
+function fotoData(file){return new Promise((res,rej)=>{const img=new Image();const u=URL.createObjectURL(file);img.onload=()=>{const m=240,s=Math.min(1,m/Math.max(img.width,img.height));const c=document.createElement("canvas");c.width=Math.round(img.width*s);c.height=Math.round(img.height*s);c.getContext("2d").drawImage(img,0,0,c.width,c.height);URL.revokeObjectURL(u);res(c.toDataURL("image/jpeg",.75))};img.onerror=()=>{URL.revokeObjectURL(u);rej(new Error("img"))};img.src=u})}
+/* ---------- arranque ---------- */
+function demoData(){
+  const t=todayISO();
+  S.personas.set("demo1",{nombre:"Laura Méndez (ejemplo)",ruta:"nuevo",ciudad:"Querétaro",gerente:"Gerente de Desarrollo",etapa:3,fechas:{e1:addDays(t,-40),e2:addDays(t,-20),e3:addDays(t,-9)},
+    adt:{psp:{confiable:"si",estilo:"Interpersonal",rend:"promedio",ventas:"moderado",emp:"alto",alertas:{planificacion:"alerta",presentaciones:"alerta",cierre:"alerta",cumplimiento:"alerta"}},E1:{fecha:addDays(t,-40),decision:"Avanza",f:{v1:9,v2:8,v3:8,v4:7,v5:8,v6:8,t1:8,t2:9}},E2:{fecha:addDays(t,-33),decision:"Avanza",f:{v1:9,v2:8,v3:8,v4:8,v5:8,v6:7,t1:8,t2:9}},E3:{fecha:addDays(t,-27),decision:"Aceptado",f:{v1:9,v2:8,v3:9,v4:8,v5:8,v6:8,t1:9,t2:9}}},
+    cartas:{c1:{fecha:addDays(t,-27)}},e2:{generacion:"Nov 2026",asistencia:100,certificado:"Sí",fin:addDays(t,-9),cursos:[{id:"a",nombre:"Introducción a Vida Individual",hecho:true},{id:"b",nombre:"Gastos Médicos Mayores básico",hecho:false}]},
+    e3:{inicio:addDays(t,-9)},ventas:[{id:"v1",fecha:addDays(t,-4),ramo:"Vida Individual",prima:18500,negocio:"1"}],docs:{d0:{estado:"Entregado"},d1:{estado:"Entregado"},d2:{estado:"Entregado"}}});
+  S.personas.set("demo2",{nombre:"Jorge Salinas (ejemplo)",ruta:"cedula",ciudad:"Guadalajara",gerente:"Gerente de Desarrollo",etapa:1,fechas:{e1:addDays(t,-6)},adt:{E1:{fecha:addDays(t,-6),decision:"Avanza"}}});
+}
+async function login(pin,recordar){
+  S.pin=pin;const j=await api("load");
+  S.me=j.user;S.rol=j.user.rol;S.myName=j.user.nombre;S.isAdmin=!!j.user.admin;S.canWrite=true;
+  aplicar(j);S.loaded=true;setSync("ok");
+  try{if(recordar)localStorage.setItem("campus-pin",pin);else sessionStorage.setItem("campus-pin",pin)}catch(e){}
+  render();
+}
+function aplicar(j){
+  if(j.personas)S.personas=new Map(j.personas.map(x=>[x.id,clone(x.data)]));
+  if(j.config)S.config=Object.assign(clone(DEF_CONFIG),j.config,{metas:Object.assign({},DEF_CONFIG.metas,j.config.metas||{}),comisiones:Object.assign({},DEF_CONFIG.comisiones,j.config.comisiones||{})});
+  if(j.recursos)S.recursos=j.recursos;
+}
+function logout(){S.me=null;S.pin=null;S.personas=new Map();S.openId=null;try{localStorage.removeItem("campus-pin");sessionStorage.removeItem("campus-pin")}catch(e){}setSync("login");render()}
+async function refrescar(){
+  if(!S.me||S.pend>0||document.hidden)return;
+  const a=document.activeElement;if(a&&/INPUT|TEXTAREA|SELECT/.test(a.tagName))return;
+  try{const j=await api("personas");if(S.pend>0)return;aplicar(j);setSync("ok");scheduleRender()}catch(e){setSync("off");if(e.code==="pin")logout()}
+}
+(async function init(){
+  try{const h=location.hash.slice(1);if(["equipo","generaciones","recursos","configuracion"].includes(h))S.view=h}catch(e){}
+  if(!API_URL){S.demo=true;demoData();setSync("demo");S.isAdmin=true;render();return}
+  setSync("login");
+  let pin=null;try{pin=localStorage.getItem("campus-pin")||sessionStorage.getItem("campus-pin")}catch(e){}
+  if(pin){try{await login(pin,!!localStorage.getItem("campus-pin"))}catch(e){logout()}}else render();
+  setInterval(refrescar,60000);
+})();
+</script>
+</body>
+</html>
